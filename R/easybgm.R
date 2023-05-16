@@ -132,7 +132,7 @@ easybgm <- function(data, type, package = NULL, not.cont = NULL, iter = 1e4,
     },
     error = function(e){
       # If an error occurs, stop running the code
-      stop("Error: ", e$message)
+      stop(paste("Error meassage: ", e$message, "Please consult the original message for more information.") )
     })
 
   # Extract the results
