@@ -119,6 +119,7 @@ easybgm <- function(data, type, package = NULL, not.cont = NULL, iter = 1e4,
            choose either the BDgraph or BGGM package. By default we have changed the package to BDgraph",
             call. = FALSE)
     package <- "package_bdgraph"
+
   }
 
 
