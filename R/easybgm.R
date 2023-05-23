@@ -95,13 +95,6 @@ easybgm <- function(data, type, package = NULL, not.cont = NULL, iter = 1e4,
          call. = FALSE)
   }
 
-  if(type =="continuous" & package == "BDgraph" & any(is.na(data))){
-    warning("The data contains missing values which cannot be handled as continuous data by BDgraph.
-            Note that we switched the type to \"mixed\", which estimates a GCGM and can impute missing data.")
-    type <- "mixed"
-    not.cont <- rep(0, ncol(data))
-  }
-
   # Set default values for fitting if package is unspecified
   if(is.null(package)){
     if(type == "continuous") package <- "package_bdgraph"
@@ -112,6 +105,13 @@ easybgm <- function(data, type, package = NULL, not.cont = NULL, iter = 1e4,
     if(package == "BDgraph") package <- "package_bdgraph"
     if(package == "BGGM") package <- "package_bggm"
     if(package == "bgms") package <- "package_bgms"
+  }
+
+  if(type =="continuous" & package == "package_bdgraph" & any(is.na(data))){
+    warning("The data contains missing values which cannot be handled as continuous data by BDgraph.
+            Note that we switched the type to \"mixed\", which estimates a GCGM and can impute missing data.")
+    type <- "mixed"
+    not.cont <- rep(0, ncol(data))
   }
 
   if((package == "package_bgms") & (type %in% c("continuous", "mixed"))){
