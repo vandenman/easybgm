@@ -4,11 +4,11 @@
 
 bgm_fit.package_bggm <- function(fit, type, data, iter, save,
                                  not.cont, centrality, progress, ...){
-  
+
   prior_defaults <- list(
     prior_sd = .25
   )
-  
+
   args <- set_defaults(prior_defaults, ...)
   # Fit the model
   bggm_fit <- do.call(
@@ -27,7 +27,7 @@ bgm_fit.package_bggm <- function(fit, type, data, iter, save,
 # 2. Extracting results function
 # --------------------------------------------------------------------------------------------------
 
-bgm_extract.package_bggm <- function(fit, model, save,
+bgm_extract.package_bggm <- function(fit, type, save,
                                      not.cont, data, centrality, ...){
   fit <- fit$packagefit
 

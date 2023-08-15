@@ -4,7 +4,7 @@
 \alias{plot_posteriorcomplexity}
 \title{Plot posterior structure complexity}
 \usage{
-plot_posteriorcomplexity(output)
+plot_posteriorcomplexity(output, ...)
 }
 \arguments{
 \item{output}{Output object from the easybgm function}

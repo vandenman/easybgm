@@ -8,7 +8,7 @@ bgm_fit.package_bgms <- function(fit, type, data, iter, save,
   if(save == FALSE & centrality == TRUE){
     save <- TRUE
   }
-  
+
   prior_defaults <- list(
     interaction_prior = "UnitInfo",
     cauchy_scale = 2.5,
@@ -33,7 +33,7 @@ bgm_fit.package_bgms <- function(fit, type, data, iter, save,
 
   args <- set_defaults(prior_defaults, ...)
   bgms_fit <- do.call(
-    bgm, c(list(x = data, iter = iter, save = save, display_progress = progress),
+    bgm, c(list(x = data, iter = iter, save = T, display_progress = progress),
            args)
   )
 
@@ -49,33 +49,33 @@ bgm_fit.package_bgms <- function(fit, type, data, iter, save,
 # --------------------------------------------------------------------------------------------------
 # 2. Extracting results function
 # --------------------------------------------------------------------------------------------------
-bgm_extract.package_bgms <- function(fit, model, save,
+bgm_extract.package_bgms <- function(fit, type, save,
                                      not.cont, data, centrality, ...){
   if(centrality == TRUE) save <- TRUE
 
   fit <- fit$packagefit
-  
+
   defaults <- list(
     edge_prior = "Bernoulli"
   )
-  
+
   args <- set_defaults(defaults, ...)
   if (args$edge_prior == "Bernoulli") {
     extra_defaults <- list(
       inclusion_probability = .5
     )
   }
-  
+
   else {
     extra_defaults <- list(
       beta_bernoulli_alpha = 1,
       beta_bernoulli_beta = 1
     )
   }
-  
+
   defaults <- append(defaults, extra_defaults)
   args <- set_defaults(defaults, ...)
-  
+
   if (args$edge_prior == "Bernoulli") {
     edge.prior <- args$inclusion_probability
   }
@@ -104,7 +104,7 @@ bgm_extract.package_bgms <- function(fit, model, save,
       bgms_res$centrality <- centrality(bgms_res)
     }
   }
-  bgms_res$model <- model
+  bgms_res$model <- type
   output <- bgms_res
   return(output)
 }

@@ -4,7 +4,7 @@
 \alias{plot_parameterHDI}
 \title{Plot of interaction parameters and their 95\% highest density intervals}
 \usage{
-plot_parameterHDI(output)
+plot_parameterHDI(output, ...)
 }
 \arguments{
 \item{output}{Output object from the easybgm function}

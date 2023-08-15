@@ -4,7 +4,7 @@
 \alias{plot_posteriorstructure}
 \title{Plot Posterior Structure Probabilities}
 \usage{
-plot_posteriorstructure(output, as.BF = FALSE)
+plot_posteriorstructure(output, as.BF = FALSE, ...)
 }
 \arguments{
 \item{output}{Output object from the easybgm function}

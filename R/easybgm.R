@@ -176,7 +176,7 @@ easybgm <- function(data, type, package = NULL, not.cont = NULL, iter = 1e4,
     })
 
   # Extract the results
-  res <- bgm_extract(fit, model = fit$model,
+  res <- bgm_extract(fit, type = type,
                      save = save, not.cont = not.cont,
                      data = data, centrality = centrality, ...)
 
