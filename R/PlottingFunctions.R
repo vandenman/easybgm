@@ -9,7 +9,7 @@
 #' @importFrom dplyr group_by summarise mutate group_modify filter
 #'
 
-plot_posteriorstructure <- function(output, as.BF = FALSE) {
+plot_posteriorstructure <- function(output, as.BF = FALSE, ...) {
   if(!any(class(output) == "easybgm")){
     stop("Wrong input provided. The function requires as input the output of the easybgm function.")
   }
@@ -17,33 +17,47 @@ plot_posteriorstructure <- function(output, as.BF = FALSE) {
     stop("The plot cannot be obtained for models estimated with BGGM. Suggestion: Change the package to BDgraph.",
          call. = FALSE)
   }
-
+  
+  default_args <- list(
+    xlab = "Structures",
+    ylab = ifelse(as.BF == TRUE, expression(log(BF[1][s])), "Posterior Structure Probability"),
+    theme = theme_classic(),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    axis.line = element_line(colour = "black", size = 1.1),
+    axis.title = element_text(size = 16),
+    axis.text = element_text(size = 14), 
+    axis.ticks.length = unit(.25, "cm")
+  )
+  
+  args <- set_defaults(default_args, ...)
   sorted_structure_prob <- as.data.frame(sort(output$structure_probabilities, decreasing=T))
   colnames(sorted_structure_prob) <- "posterior_prob"
   if(as.BF){
+    
     BF1s <- sorted_structure_prob$posterior_prob[1] / sorted_structure_prob$posterior_prob # BF best structure vs. others
     data <- data.frame(structures = 1:length(BF1s), BayesFactor = BF1s)
     ggplot2::ggplot(data, aes(x = structures, y = BayesFactor)) +
-      geom_point(size = 4, shape = 1) +
+      geom_point(size = 4, shape = 1, ...) +
       scale_y_continuous(trans = "log10") +
-      theme_classic()+
-      labs(x = "Structures",
-           y = expression(log(BF[1][s])))+
-      theme(panel.grid.major = element_blank(),
-            panel.grid.minor = element_blank(), axis.line = element_line(colour = "black", linewidth = 1.1),
-            axis.text = element_text(size = 14), axis.title = element_text(size = 16),
-            axis.ticks.length = unit(.25, "cm"))
+      args$theme +
+      labs(x = args$xlab,
+           y = args$ylab) +
+      theme(panel.grid.major = args$panel.grid.major,
+            panel.grid.minor = args$panel.grid.minor, axis.line = args$axis.line,
+            axis.text = args$axis.text, axis.title = args$axis.title,
+            axis.ticks.length = args$axis.ticks.length)
   } else {
     data <- data.frame(structures = 1:nrow(sorted_structure_prob), Probs = sorted_structure_prob)
-    ggplot2::ggplot(data, aes(x = structures, y = posterior_prob)) +
+    ggplot2::ggplot(data, aes(x = structures, y = posterior_prob, ...)) +
       geom_point(size = 4, shape = 1) +
-      theme_classic()+
-      labs(x = "Structures",
-           y = "Posterior Structure Probability")+
-      theme(panel.grid.major = element_blank(),
-            panel.grid.minor = element_blank(), axis.line = element_line(colour = "black", linewidth = 1.1),
-            axis.text = element_text(size = 14), axis.title = element_text(size = 16),
-            axis.ticks.length = unit(.25, "cm"))
+      args$theme +
+      labs(x = args$xlab,
+           y = args$ylab) +
+      theme(panel.grid.major = args$panel.grid.major,
+            panel.grid.minor = args$panel.grid.minor, axis.line = args$axis.line,
+            axis.text = args$axis.text, axis.title = args$axis.text,
+            axis.ticks.length = args$axis.ticks.length)
   }
 }
 
@@ -58,7 +72,7 @@ plot_posteriorstructure <- function(output, as.BF = FALSE) {
 #' @import ggplot2
 #'
 
-plot_posteriorcomplexity <- function(output) {
+plot_posteriorcomplexity <- function(output, ...) {
   if(!any(class(output) == "easybgm")){
     stop("Wrong input provided. The function requires as input the output of the easybgm function.")
   }
@@ -66,6 +80,26 @@ plot_posteriorcomplexity <- function(output) {
     stop("The plot cannot be obtained for models estimated with BGGM. Suggestion: Change the package to BDgraph.",
          call. = FALSE)
   }
+  
+  default_args <- list(
+    xlab = "Complexity",
+    ylab = "Posterior Complexity Probability",
+    theme = theme_minimal(),
+    legend.position = c(.85, .25),
+    axis.text.size = 20,
+    legend.background = element_rect(fill = NULL),
+    panel.border = element_blank(),
+    axis.line = element_line(colour = "black", size = 1.1),
+    axis.ticks = element_line(size=.8),
+    legend.text = element_text(size = 14),
+    
+    axis.ticks.length = unit(.2, "cm"),
+    axis.title.x = element_text(size = 18, face = "bold"),
+    axis.title.y = element_text(size = 18, face = "bold"),
+    panel.grid.major = element_blank()
+  )
+  
+  args <- set_defaults(default_args, ...)
   complexity <- c()
   for(i in 1:length(output$sample_graph)){
     complexity[i] <- sum(as.numeric(unlist(strsplit(output$sample_graph[i], ""))))
@@ -76,18 +110,19 @@ plot_posteriorcomplexity <- function(output) {
     dplyr::summarise(complexity_weight = sum(weights)) |>
     dplyr::mutate(complexity_weight = complexity_weight/sum(complexity_weight))
 
-  ggplot(data_complexity, aes(x = complexity, y = complexity_weight))+
+  ggplot(data_complexity, aes(x = complexity, y = complexity_weight, ...)) +
     geom_point() +
-    ylab("Posterior Complexity Probability") +
-    xlab("Complexity")  +
-    theme_minimal()+
-    theme(legend.position = c(.85, 0.25), axis.text=element_text(size=20),
-          legend.background = element_rect(fill = NULL), panel.border = element_blank(),
-          axis.line = element_line(colour = "black", linewidth = 1.1), axis.ticks.length=unit(.2, "cm"),
-          axis.ticks = element_line(linewidth = .8), legend.text = element_text(size=14),
-          axis.title.x = element_text(size=18,face="bold"),
-          axis.title.y = element_text(size=18,face="bold"),
-          panel.grid.major = element_blank()
+    ylab(args$ylab) +
+    xlab(args$xlab)  +
+    args$theme +
+    theme(legend.position = args$legend.position, axis.text=element_text(size=args$axis.text.size),
+          legend.background =  args$legend.background, panel.border = args$panel.border,
+          axis.line = args$axis.line, axis.ticks.length=args$axis.ticks.length,
+          axis.ticks = args$axis.ticks, legend.text = args$legend.text,
+          axis.title.x = args$axis.title.x,
+          axis.title.y = args$axis.title.y,
+          panel.grid.major = args$panel.grid.major
+
     )
 }
 
@@ -107,26 +142,52 @@ plot_edgeevidence <- function(output, evidence_thresh = 10, split = F, show = "a
   if(!any(class(output) == "easybgm")){
     stop("Wrong input provided. The function requires as input the output of the easybgm function.")
   }
-
+  
+  default_args <- list(
+    colors = c("#36648b", "#990000", "#bfbfbf"),
+    colnames = colnames(output$parameters),
+    layout_avg = qgraph::averageLayout(output$parameters*output$structure),
+    theme = "TeamFortress",
+    legend = T,
+    vsize = 10,
+    labels = colnames(output$parameters),
+    edge.width = 3,
+    label.cex = 1,
+    legend.cex = .8
+    
+  )
+  args <- set_defaults(default_args, ...)
   graph <- output$BF
   diag(graph) <- 1
-
+  
   # assign a color to each edge (inclusion - blue, exclusion - red, no conclusion - grey)
   graph_color <- graph
-  graph_color <-  ifelse(graph < evidence_thresh & graph > 1/evidence_thresh, graph_color <- "#bfbfbf", graph_color <- "#36648b")
-  graph_color[graph < (1/evidence_thresh)] <- "#990000"
+  graph_color <-  ifelse(graph < evidence_thresh & graph > 1/evidence_thresh, 
+                         graph_color <- args$colors[3], graph_color <- args$colors[1])
+  graph_color[graph < (1/evidence_thresh)] <- args$colors[2]
 
-  if(show == "all"){
-    if(split == F){
+  if (show == "all") {
+    if (split == F) {
       graph[output$inc_probs <= 1] <- 1
       diag(graph) <- 1
-      colnames(graph) <- colnames(output$parameters)
+      colnames(graph) <- args$colnames
       qgraph::qgraph(graph,
-                     edge.color = graph_color, # specifies the color of the edges
+                     edge.color = graph_color,
+                     layout = args$layout_avg,# specifies the color of the edges
+                     theme = args$theme,
+                     vsize = args$vsize,
+                     nodeNames = args$nodeNames,
+                     legend = args$legend,
+                     labels = args$labels,
+                     edge.width = args$edge.width,
+                     label.cex = args$label.cex,
+                     legend.cex = args$legend.cex,
                      ...
       )
     }
-    if(split == T){
+
+    if (split == T) {
+
       graph_inc <- graph_exc <- graph
       # plot included graph
       graph_inc[output$inc_probs >= .5] <- 1
@@ -134,7 +195,16 @@ plot_edgeevidence <- function(output, evidence_thresh = 10, split = F, show = "a
       diag(graph_inc) <- 1
       colnames(graph_inc) <- colnames(output$parameters)
       qgraph::qgraph(graph_inc,
-                     edge.color = graph_color, # specifies the color of the edges
+                     edge_color = graph_color,
+                     layout = args$layout_avg,# specifies the color of the edges
+                     theme = args$theme,
+                     vsize = args$vsize,
+                     nodeNames = args$nodeNames,
+                     legend = args$legend,
+                     labels = args$labels,
+                     edge.width = args$edge.width,
+                     label.cex = args$label.cex,
+                     legend.cex = args$legend.cex, # specifies the color of the edges
                      ...
       )
       # Plot excluded graph
@@ -143,7 +213,17 @@ plot_edgeevidence <- function(output, evidence_thresh = 10, split = F, show = "a
       diag(graph_exc) <- 1
       colnames(graph_exc) <- colnames(output$parameters)
       qgraph::qgraph(graph_exc,
-                     edge.color = graph_color, # specifies the color of the edges
+                     edge.color = graph_color,
+                     # specifies the color of the edges
+                     layout = args$layout_avg,# specifies the color of the edges
+                     theme = args$theme,
+                     vsize = args$vsize,
+                     nodeNames = args$nodeNames,
+                     legend = args$legend,
+                     labels = args$labels,
+                     edge.width = args$edge.width,
+                     label.cex = args$label.cex,
+                     legend.cex = args$legend.cex,
                      ...
       )
     }
@@ -162,7 +242,15 @@ plot_edgeevidence <- function(output, evidence_thresh = 10, split = F, show = "a
       diag(graph_show) <- 1
       colnames(graph_show) <- colnames(output$parameters)
       qgraph::qgraph(graph_show,
-                     edge.color = graph_color, # specifies the color of the edges
+                     edge.color = graph_color,
+                     layout = args$layout_avg,# specifies the color of the edges
+                     theme = args$theme,
+                     vsize = args$vsize,
+                     nodeNames = args$nodeNames,
+                     legend = args$legend,
+                     labels = args$labels,
+                     label.cex = args$label.cex,
+                     legend.cex = args$legend.cex,# specifies the color of the edges
                      ...
       )
     }
@@ -189,9 +277,19 @@ plot_network <- function(output, exc_prob = .5, dashed = F, ...) {
     stop("Plot cannot be obtained for 'dgm-binary' models. Use the package bgms instead to obtain parameter estimates.",
          call. = FALSE)
   }
-
   graph <- output$parameters
-
+  default_args <- list(
+    evidence_thres = 10,
+    theme = "TeamFortress",
+    vsize = 10,
+    nodeNames = colnames(output$parameters),
+    legend = T,
+    labels = colnames(output$parameters),
+    label.cex = 1,
+    legend.cex = .8
+  )
+  args <- set_defaults(default_args, ...)
+  
   # Exclude edges with a inclusion probability lower exc_prob
   inc_probs_m <- output$inc_probs
   graph[inc_probs_m < exc_prob] <- 0
@@ -199,13 +297,23 @@ plot_network <- function(output, exc_prob = .5, dashed = F, ...) {
 
   # Plot
   if(dashed == T){
-    graph_dashed <- ifelse(output$BF < 10, "dashed", "solid")
-    qgraph::qgraph(graph, lty = graph_dashed, ...)
+    graph_dashed <- ifelse(output$BF < args$evidence_thres, "dashed", "solid")
+    qgraph::qgraph(graph, lty = graph_dashed, 
+                   theme = args$theme, vsize = args$vsize,
+                   nodeNames = args$nodeNames,
+                   legend = args$legend,
+                   labels = args$labels,
+                   label.cex = args$label.cex,
+                   legend.cex = args$legend.cex, ...)
   } else {
-    qgraph::qgraph(graph, ...) 
+    qgraph::qgraph(graph, theme = args$theme, vsize = args$vsize,
+                   nodeNames = args$nodeNames,
+                   legend = args$legend,
+                   labels = args$labels,
+                   label.cex = args$label.cex,
+                   legend.cex = args$legend.cex, ...)
+
   }
-
-
 
 }
 
@@ -242,8 +350,8 @@ plot_structure <- function(output, ...) {
 #' @export
 #' @import ggplot2 HDInterval
 #'
-plot_parameterHDI <- function(output) {
-
+plot_parameterHDI <- function(output, ...) {
+  
   if(!any(class(output) == "easybgm")){
     stop("Wrong input provided. The function requires as input the output of the easybgm function.")
   }
@@ -251,7 +359,26 @@ plot_parameterHDI <- function(output) {
   if(is.null(output$samples_posterior)){
     stop("Samples of the posterior distribution required. When estimating the model, set \"save = TRUE\".")
   }
-
+  
+  def_args <- list(
+    theme_ = theme_bw(),
+    geom_pointrange = geom_pointrange(position = position_dodge(width = c(0.3)),
+                                      size = .3),
+    xlab = "",
+    ylab = "Highest Density Interval of Parameter",
+    geom_hline = geom_hline(yintercept = 0, linetype = "dashed", size = 1.3),
+    theme = theme(
+    axis.text = element_text(size=8),
+    panel.border = element_blank(),
+    axis.line = element_line(colour = "black", size = 1.1),
+    axis.ticks.length = unit(.2, "cm"),
+    axis.ticks = element_line(size = .8),
+    axis.title.x = element_text(size = 16, face = "bold"),
+    plot.title = element_text(size = 18, face = "bold")
+    )
+  )
+  
+  args <- set_defaults(def_args, ...)
   hdi_intervals <- as.data.frame(apply(output$samples_posterior, MARGIN = 2, FUN = hdi))
   posterior_medians <- apply(output$samples_posterior, MARGIN = 2, FUN = median)
 
@@ -269,17 +396,15 @@ plot_parameterHDI <- function(output) {
 
 
   ggplot2::ggplot(data = posterior, aes(x = names, y = posterior_medians, ymin = lower,
-                                        ymax = upper)) +
-    geom_pointrange(position=position_dodge(width=c(0.3)), size = .3) +
-    theme_bw() +
+                                        ymax = upper, ...)) +
+    args$geom_pointrange +
+    args$theme_ +
     coord_flip() +
-    ylab("Highest Density Interval of Parameter")+
-    xlab("") +
-    geom_hline(yintercept = 0, linetype = "dashed", linewidth = 1.3) +
-    theme(axis.text=element_text(size=8), panel.border = element_blank(),
-          axis.line = element_line(colour = "black", linewidth = 1.1), axis.ticks.length=unit(.2, "cm"),
-          axis.ticks = element_line(linewidth = .8),
-          axis.title.x = element_text(size=16,face="bold"), plot.title = element_text(size = 18, face = "bold"))
+    ylab(args$ylab)+
+    xlab(args$xlab) +
+    args$geom_hline +
+    args$theme
+
 }
 
 
@@ -293,6 +418,7 @@ plot_parameterHDI <- function(output) {
 #' @export
 #'
 
+
 plot_centrality <- function(output){
 
   if(!any(class(output) == "easybgm")){
@@ -302,7 +428,16 @@ plot_centrality <- function(output){
   if(is.null(output$centrality)){
     stop("Centrality results are required. When estimating the model, set \"centrality = TRUE\".")
   }
-
+  
+  default_args <- list(
+    ylab = "Value",
+    xlab = "Nodes",
+    geom_errorbar = geom_errorbar(aes(y=value, ymin = lower, ymax = upper)
+                                  , size =.5, width=.4)
+    
+  )
+  
+  args <- set_defaults(default_args, ...)
   cent_samples <- output$centrality
   p <- ncol(output$parameters)
   rownames(cent_samples) <- NULL
@@ -319,9 +454,9 @@ plot_centrality <- function(output){
     arrange(mean) |>
     ggplot(aes(x = node, y=mean))+
     geom_point()+
-    geom_errorbar(aes(y= mean, ymin =lower, ymax = upper), linewidth = .5, width = 0.4)+
+    args$geom_errorbar+
     coord_flip() +
-    ylab("Value") +
-    xlab("Nodes")
+    ylab(args$ylab) +
+    xlab(args$xlab)
 }
 
