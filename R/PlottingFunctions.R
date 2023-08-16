@@ -155,7 +155,7 @@ if(!any(class(output) == "easybgm")){
     nodeNames = colnames(output$parameters),
     edge.width = 3,
     label.cex = 1,
-    legend.cex = .8
+    legend.cex = .6
 
   )
   args <- set_defaults(default_args, ...)
@@ -282,9 +282,8 @@ plot_network <- function(output, exc_prob = .5, dashed = F, ...) {
     vsize = 10,
     nodeNames = colnames(output$parameters),
     legend = T,
-    labels = colnames(output$parameters),
-    label.cex = 1,
-    legend.cex = .8
+    label.cex = 1.2,
+    legend.cex = .6
   )
   args <- set_defaults(default_args, ...)
 
@@ -300,14 +299,12 @@ plot_network <- function(output, exc_prob = .5, dashed = F, ...) {
                    theme = args$theme, vsize = args$vsize,
                    nodeNames = args$nodeNames,
                    legend = args$legend,
-                   labels = args$labels,
                    label.cex = args$label.cex,
                    legend.cex = args$legend.cex, ...)
   } else {
     qgraph::qgraph(graph, theme = args$theme, vsize = args$vsize,
                    nodeNames = args$nodeNames,
                    legend = args$legend,
-                   labels = args$labels,
                    label.cex = args$label.cex,
                    legend.cex = args$legend.cex, ...)
 
@@ -328,14 +325,18 @@ plot_network <- function(output, exc_prob = .5, dashed = F, ...) {
 #'
 
 plot_structure <- function(output, ...) {
-
+  default_args <- list(
+    nodeNames = colnames(output$parameters),
+    legend = TRUE
+  )
+  args <- set_defaults(default_args, ...)
   if(!any(class(output) == "easybgm")){
     stop("Wrong input provided. The function requires as input the output of the easybgm function.")
   }
   graph <- output$structure
 
   # Plot
-  qgraph::qgraph(graph, ...)
+  qgraph::qgraph(graph, legend = args$legend, nodeNames = args$nodeNames, ...)
 
 }
 
@@ -455,7 +456,7 @@ plot_centrality <- function(output, ...){
 
   centrality_summary |>
     dplyr::arrange(mean) |>
-    ggplot(aes(x = .data$node, y=.data$mean))+
+    ggplot(aes(x = .data$node, y=.data$mean, ...))+
     geom_point()+
     args$geom_errorbar+
     coord_flip() +
