@@ -8,6 +8,8 @@ plot_parameterHDI(output, ...)
 }
 \arguments{
 \item{output}{Output object from the easybgm function}
+
+\item{...}{Additional arguments passed onto \code{ggplot2}}
 }
 \description{
 Plot of interaction parameters and their 95\% highest density intervals

@@ -1,26 +1,32 @@
-#' Summary function for easybgm objects
+#' @name summary.easybgm
+#' @title  Summary method for \code{easybgm} objects
 #'
-#' @param x easybgm object
+#' @description Used to create a object of easybgm results and in turn print it
+#'
+#' @param object easybgm object
 #' @param evidence_thresh Bayes Factor which will be considered sufficient evidence for in-/exclusion, default is 10.
+#' @param ... unused argument
 #'
 #' @export
 
-summary.easybgm <- function(x, evidence_thresh = 10, ...) {
+summary.easybgm <- function(object, evidence_thresh = 10, ...) {
+
+  dots_check(...)
 
   # nodes
-  p <- ncol(x$parameters)
+  p <- ncol(object$parameters)
 
   # names for each relation
-  names <- colnames(x$parameters)
+  names <- colnames(object$parameters)
   names_bycol <- matrix(rep(names, each = p), ncol = p)
   names_byrow <- matrix(rep(names, each = p), ncol = p, byrow = T)
   names_comb <- matrix(paste0(names_byrow, "-", names_bycol), ncol = p)
   mat_names <- names_comb[upper.tri(names_comb)]
 
   # create data frame with parameter results
-  if(x$model %in% c("dgm-binary")){
-    inc_probs  <- round(x$inc_probs, 3)[upper.tri(x$inc_probs)]
-    BF <- round(x$BF, 3)[upper.tri(x$BF)]
+  if(object$model %in% c("dgm-binary")){
+    inc_probs  <- round(object$inc_probs, 3)[upper.tri(object$inc_probs)]
+    BF <- round(object$BF, 3)[upper.tri(object$BF)]
     #create the category of the edge (i.e., included, excluded, inconclusive)
     category <- character(length(BF))
     category[(BF < evidence_thresh) & (BF > 1/evidence_thresh)] <- "inconclusive"
@@ -42,9 +48,9 @@ summary.easybgm <- function(x, evidence_thresh = 10, ...) {
       "Inclusion BF",
       "Category")
   } else {
-    parameter_values <- round(x$parameters, 3)[upper.tri(x$parameters)]
-    inc_probs  <- round(x$inc_probs, 3)[upper.tri(x$inc_probs)]
-    BF <- round(x$BF, 3)[upper.tri(x$BF)]
+    parameter_values <- round(object$parameters, 3)[upper.tri(object$parameters)]
+    inc_probs  <- round(object$inc_probs, 3)[upper.tri(object$inc_probs)]
+    BF <- round(object$BF, 3)[upper.tri(object$BF)]
     #create the category of the edge (i.e., included, excluded, inconclusive)
     category <- character(length(BF))
     category[(BF < evidence_thresh) & (BF > 1/evidence_thresh)] <- "inconclusive"
@@ -70,8 +76,8 @@ summary.easybgm <- function(x, evidence_thresh = 10, ...) {
   # create list with output
   out <- list()
   out$parameters <- results
-  out$package <- strsplit(class(x)[1], "_")[[1]][2]
-  out$model <- x$model
+  out$package <- strsplit(class(object)[1], "_")[[1]][2]
+  out$model <- object$model
   out$n_nodes <- p
   out$n_possible_edges <- p*(p-1)/2
   out$n_inclu_edges <- sum(BF > evidence_thresh)
@@ -79,33 +85,41 @@ summary.easybgm <- function(x, evidence_thresh = 10, ...) {
   out$n_exclu_edges <- sum(BF < 1/evidence_thresh)
 
   # structure information
-  if(all(class(x) != "package_bggm")){
+  if(all(class(object) != "package_bggm")){
     out$possible_struc <- 2^(p*(p-1)/2)
-    out$n_structures <- length(x$sample_graph)
-    out$max_structure_prob <- max(x$structure_probabilities)
+    out$n_structures <- length(object$sample_graph)
+    out$max_structure_prob <- max(object$structure_probabilities)
   }
 
   # Save command calls
-  out$fit_object <- x
+  out$fit_object <- object
   out$evidence_thresh <- evidence_thresh
 
   # return object
-  class(out) <- class(x)
+  class(out) <- class(object)
   return(out)
   print(out)
 }
 
-#' Print function for easybgm objects
+#' @name print.easybgm
+#' @title  Print method for \code{easybgm} objects
+#'
+#' @description Used to print easybgm results. The nicest overview is created by first feeding it to
+#' `summary()`
 #'
 #' @param x easybgm object
+#' @param ... unused argument
 #'
 #' @export
 #'
 
 print.easybgm <- function(x, ...){
 
+  dots_check(...)
+
   if(is.null(x$n_inclu_edges)){
-    print(summary.easybgm(x))
+    NextMethod("print")
+    #print(summary.easybgm(x))
   }
   if(any(class(x) == "package_bggm")){
     cat("\n BAYESIAN ANALYSIS OF NETWORKS",

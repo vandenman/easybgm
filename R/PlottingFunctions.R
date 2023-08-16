@@ -4,6 +4,7 @@
 #'
 #' @param output Output object from the easybgm function
 #' @param as.BF if TRUE plots the y-axis as Bayes factor instead of posterior structure probability
+#' @param ... Additional arguments passed onto `ggplot2`
 #'
 #' @export
 #' @importFrom dplyr group_by summarise mutate group_modify filter
@@ -24,7 +25,7 @@ plot_posteriorstructure <- function(output, as.BF = FALSE, ...) {
     theme = theme_classic(),
     panel.grid.major = element_blank(),
     panel.grid.minor = element_blank(),
-    axis.line = element_line(colour = "black", size = 1.1),
+    axis.line = element_line(colour = "black", linewidth = 1.1),
     axis.title = element_text(size = 16),
     axis.text = element_text(size = 14),
     axis.ticks.length = unit(.25, "cm")
@@ -37,7 +38,7 @@ plot_posteriorstructure <- function(output, as.BF = FALSE, ...) {
 
     BF1s <- sorted_structure_prob$posterior_prob[1] / sorted_structure_prob$posterior_prob # BF best structure vs. others
     data <- data.frame(structures = 1:length(BF1s), BayesFactor = BF1s)
-    ggplot2::ggplot(data, aes(x = structures, y = BayesFactor)) +
+    ggplot2::ggplot(data, aes(x = .data$structures, y = .data$BayesFactor)) +
       geom_point(size = 4, shape = 1, ...) +
       scale_y_continuous(trans = "log10") +
       args$theme +
@@ -49,7 +50,7 @@ plot_posteriorstructure <- function(output, as.BF = FALSE, ...) {
             axis.ticks.length = args$axis.ticks.length)
   } else {
     data <- data.frame(structures = 1:nrow(sorted_structure_prob), Probs = sorted_structure_prob)
-    ggplot2::ggplot(data, aes(x = structures, y = posterior_prob, ...)) +
+    ggplot2::ggplot(data, aes(x = .data$structures, y = .data$posterior_prob, ...)) +
       geom_point(size = 4, shape = 1) +
       args$theme +
       labs(x = args$xlab,
@@ -67,6 +68,7 @@ plot_posteriorstructure <- function(output, as.BF = FALSE, ...) {
 #' Plot posterior structure complexity
 #'
 #' @param output Output object from the easybgm function
+#' @param ... Additional arguments passed onto `ggplot2`
 #'
 #' @export
 #' @import ggplot2
@@ -89,8 +91,8 @@ plot_posteriorcomplexity <- function(output, ...) {
     axis.text.size = 20,
     legend.background = element_rect(fill = NULL),
     panel.border = element_blank(),
-    axis.line = element_line(colour = "black", size = 1.1),
-    axis.ticks = element_line(size=.8),
+    axis.line = element_line(colour = "black", linewidth = 1.1),
+    axis.ticks = element_line(linewidth = .8),
     legend.text = element_text(size = 14),
 
     axis.ticks.length = unit(.2, "cm"),
@@ -107,10 +109,10 @@ plot_posteriorcomplexity <- function(output, ...) {
 
   data_complexity <- data.frame(complexity = complexity, weights = output$graph_weights) |>
     dplyr::group_by(complexity) |>
-    dplyr::summarise(complexity_weight = sum(weights)) |>
-    dplyr::mutate(complexity_weight = complexity_weight/sum(complexity_weight))
+    dplyr::summarise(complexity_weight = sum(.data$weights)) |>
+    dplyr::mutate(complexity_weight = .data$complexity_weight/sum(.data$complexity_weight))
 
-  ggplot(data_complexity, aes(x = complexity, y = complexity_weight, ...)) +
+  ggplot(data_complexity, aes(x = .data$complexity, y = .data$complexity_weight, ...)) +
     geom_point() +
     ylab(args$ylab) +
     xlab(args$xlab)  +
@@ -134,7 +136,7 @@ plot_posteriorcomplexity <- function(output, ...) {
 #' @param evidence_thresh Bayes Factor which will be considered sufficient evidence for in-/exclusion, default is 10.
 #' @param split if TRUE, plot is split in included and excluded edges
 #' @param show specifies which edges should be shown, indicated by "all", "included", "inconclusive", "excluded"
-#' @param ... Additional `qgraph` arguments
+#' @param ... Additional arguments passed onto `qgraph`
 #'
 #' @export
 #'
@@ -142,7 +144,7 @@ plot_edgeevidence <- function(output, evidence_thresh = 10, split = F, show = "a
 if(!any(class(output) == "easybgm")){
     stop("Wrong input provided. The function requires as input the output of the easybgm function.")
   }
-  
+
   default_args <- list(
     colors = c("#36648b", "#990000", "#bfbfbf"),
     colnames = colnames(output$parameters),
@@ -154,15 +156,15 @@ if(!any(class(output) == "easybgm")){
     edge.width = 3,
     label.cex = 1,
     legend.cex = .8
-    
+
   )
   args <- set_defaults(default_args, ...)
   graph <- output$BF
   diag(graph) <- 1
-  
+
   # assign a color to each edge (inclusion - blue, exclusion - red, no conclusion - grey)
   graph_color <- graph
-  graph_color <-  ifelse(graph < evidence_thresh & graph > 1/evidence_thresh, 
+  graph_color <-  ifelse(graph < evidence_thresh & graph > 1/evidence_thresh,
                          graph_color <- args$colors[3], graph_color <- args$colors[1])
   graph_color[graph < (1/evidence_thresh)] <- args$colors[2]
 
@@ -260,7 +262,7 @@ if(!any(class(output) == "easybgm")){
 #' @param output Output object from the easybgm function
 #' @param exc_prob threshold for excluding edges; all edges with a lower inclusion probability will not be shown
 #' @param dashed binary parameter indicating whether edges with inconclusive evidence should be dashed
-#' @param ... Additional `qgraph` arguments
+#' @param ... Additional arguments passed onto `qgraph`
 
 #'
 #' @export
@@ -318,7 +320,7 @@ plot_network <- function(output, exc_prob = .5, dashed = F, ...) {
 #' Structure plot
 #'
 #' @param output Output object from the easybgm function
-#' @param ... Additional `qgraph` arguments
+#' @param ... Additional arguments passed onto `qgraph`
 #'
 #' @export
 #'
@@ -342,9 +344,11 @@ plot_structure <- function(output, ...) {
 #' Plot of interaction parameters and their 95% highest density intervals
 #'
 #' @param output Output object from the easybgm function
+#' @param ... Additional arguments passed onto `ggplot2`
 #'
 #' @export
 #' @import ggplot2 HDInterval
+#' @importFrom stats median
 #'
 plot_parameterHDI <- function(output, ...) {
 
@@ -362,13 +366,13 @@ plot_parameterHDI <- function(output, ...) {
                                       size = .3),
     xlab = "",
     ylab = "Highest Density Interval of Parameter",
-    geom_hline = geom_hline(yintercept = 0, linetype = "dashed", size = 1.3),
+    geom_hline = geom_hline(yintercept = 0, linetype = "dashed", linewidth = 1.3),
     theme = theme(
     axis.text = element_text(size=8),
     panel.border = element_blank(),
-    axis.line = element_line(colour = "black", size = 1.1),
+    axis.line = element_line(colour = "black", linewidth = 1.1),
     axis.ticks.length = unit(.2, "cm"),
-    axis.ticks = element_line(size = .8),
+    axis.ticks = element_line(linewidth = .8),
     axis.title.x = element_text(size = 16, face = "bold"),
     plot.title = element_text(size = 18, face = "bold")
     )
@@ -391,8 +395,8 @@ plot_parameterHDI <- function(output, ...) {
   posterior$names <- factor(posterior$names, levels = posterior$names)
 
 
-  ggplot2::ggplot(data = posterior, aes(x = names, y = posterior_medians, ymin = lower,
-                                        ymax = upper, ...)) +
+  ggplot2::ggplot(data = posterior, aes(x = .data$names, y = .data$posterior_medians, ymin = .data$lower,
+                                        ymax = .data$upper, ...)) +
     args$geom_pointrange +
     args$theme_ +
     coord_flip() +
@@ -410,8 +414,10 @@ plot_parameterHDI <- function(output, ...) {
 #' Plot centrality measures and 95% highest density interval
 #'
 #' @param output Output object from the easybgm function
+#' @param ... Additional arguments passed onto `ggplot2`
 #'
 #' @importFrom dplyr arrange
+#' @importFrom ggplot2 .data
 #' @export
 #'
 
@@ -429,7 +435,7 @@ plot_centrality <- function(output, ...){
   default_args <- list(
     ylab = "Value",
     xlab = "Nodes",
-    geom_errorbar = geom_errorbar(aes(y=mean, ymin = lower, ymax = upper)
+    geom_errorbar = geom_errorbar(aes(y=.data$mean, ymin = .data$lower, ymax = .data$upper)
                                   , size =.5, width=.4)
 
   )
@@ -449,7 +455,7 @@ plot_centrality <- function(output, ...){
 
   centrality_summary |>
     dplyr::arrange(mean) |>
-    ggplot(aes(x = node, y=mean))+
+    ggplot(aes(x = .data$node, y=.data$mean))+
     geom_point()+
     args$geom_errorbar+
     coord_flip() +

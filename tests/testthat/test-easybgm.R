@@ -1,6 +1,5 @@
 suppressPackageStartupMessages({
   library(bgms)
-  library(vdiffr)
 })
 
 ##--------------------------------

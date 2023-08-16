@@ -13,7 +13,7 @@ plot_network(output, exc_prob = 0.5, dashed = F, ...)
 
 \item{dashed}{binary parameter indicating whether edges with inconclusive evidence should be dashed}
 
-\item{...}{Additional \code{qgraph} arguments}
+\item{...}{Additional arguments passed onto \code{qgraph}}
 }
 \description{
 Network plot

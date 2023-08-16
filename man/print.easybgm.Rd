@@ -2,13 +2,16 @@
 % Please edit documentation in R/summary.easybgm.R
 \name{print.easybgm}
 \alias{print.easybgm}
-\title{Print function for easybgm objects}
+\title{Print method for \code{easybgm} objects}
 \usage{
 \method{print}{easybgm}(x, ...)
 }
 \arguments{
 \item{x}{easybgm object}
+
+\item{...}{unused argument}
 }
 \description{
-Print function for easybgm objects
+Used to print easybgm results. The nicest overview is created by first feeding it to
+\code{summary()}
 }

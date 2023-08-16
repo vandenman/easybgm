@@ -9,33 +9,47 @@ bgm_fit.package_bgms <- function(fit, type, data, iter, save,
     save <- TRUE
   }
 
-  prior_defaults <- list(
-    interaction_prior = "UnitInfo",
-    cauchy_scale = 2.5,
-    threshold_alpha = 1,
-    threshold_beta = 1,
-    edge_prior = "Bernoulli"
-  )
-  prior_defaults <- set_defaults(prior_defaults, ...)
-  if (prior_defaults$edge_prior == "Bernoulli") {
-    extra_args <- list(
-      inclusion_probability = .5
+  if(packageVersion("bgms") > "0.1.0"){
+    prior_defaults <- list(
+      interaction_prior = "UnitInfo",
+      cauchy_scale = 2.5,
+      threshold_alpha = 1,
+      threshold_beta = 1,
+      edge_prior = "Bernoulli"
     )
-  }
-  else {
-    extra_args <- list(
-      beta_bernoulli_alpha = 1,
-      beta_bernoulli_beta = 1
-    )
-  }
-  prior_defaults <- append(prior_defaults, extra_args)
+    prior_defaults <- set_defaults(prior_defaults, ...)
+    if (prior_defaults$edge_prior == "Bernoulli") {
+      extra_args <- list(
+        inclusion_probability = .5
+      )
+    }
+    else {
+      extra_args <- list(
+        beta_bernoulli_alpha = 1,
+        beta_bernoulli_beta = 1
+      )
+    }
+    prior_defaults <- append(prior_defaults, extra_args)
 
 
-  args <- set_defaults(prior_defaults, ...)
-  bgms_fit <- do.call(
-    bgm, c(list(x = data, iter = iter, save = T, display_progress = progress),
-           args)
-  )
+    args <- set_defaults(prior_defaults, ...)
+    bgms_fit <- do.call(
+      bgm, c(list(x = data, iter = iter, save = T, display_progress = progress),
+             args)
+    )
+  } else {
+    prior_defaults <- list(
+      interaction_prior = "UnitInfo",
+      cauchy_scale = 2.5,
+      threshold_alpha = 1,
+      threshold_beta = 1
+    )
+    args <- set_defaults(prior_defaults, ...)
+    bgms_fit <- do.call(
+      bgm, c(list(x = data, iter = iter, save = T, display_progress = progress),
+             args)
+    )
+  }
 
   fit$model <- type
   fit$packagefit <- bgms_fit
@@ -55,32 +69,36 @@ bgm_extract.package_bgms <- function(fit, type, save,
 
   fit <- fit$packagefit
 
-  defaults <- list(
-    edge_prior = "Bernoulli"
-  )
-
-  args <- set_defaults(defaults, ...)
-  if (args$edge_prior == "Bernoulli") {
-    extra_defaults <- list(
-      inclusion_probability = .5
+  if(packageVersion("bgms") > "0.1.0"){
+    defaults <- list(
+      edge_prior = "Bernoulli"
     )
-  }
 
-  else {
-    extra_defaults <- list(
-      beta_bernoulli_alpha = 1,
-      beta_bernoulli_beta = 1
-    )
-  }
+    args <- set_defaults(defaults, ...)
+    if (args$edge_prior == "Bernoulli") {
+      extra_defaults <- list(
+        inclusion_probability = .5
+      )
+    }
 
-  defaults <- append(defaults, extra_defaults)
-  args <- set_defaults(defaults, ...)
+    else {
+      extra_defaults <- list(
+        beta_bernoulli_alpha = 1,
+        beta_bernoulli_beta = 1
+      )
+    }
 
-  if (args$edge_prior == "Bernoulli") {
-    edge.prior <- args$inclusion_probability
-  }
-  else {
-    edge.prior <- beta(args$beta_bernoulli_alpha, args$beta_bernoulli_beta)
+    defaults <- append(defaults, extra_defaults)
+    args <- set_defaults(defaults, ...)
+
+    if (args$edge_prior == "Bernoulli") {
+      edge.prior <- args$inclusion_probability
+    }
+    else {
+      edge.prior <- beta(args$beta_bernoulli_alpha, args$beta_bernoulli_beta)
+    }
+  } else {
+    edge.prior <- 0.5
   }
   bgms_res <- list()
   p <- unlist(strsplit(colnames(fit$interactions)[ncol(fit$interactions)], ", "))[2]

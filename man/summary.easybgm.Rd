@@ -2,15 +2,17 @@
 % Please edit documentation in R/summary.easybgm.R
 \name{summary.easybgm}
 \alias{summary.easybgm}
-\title{Summary function for easybgm objects}
+\title{Summary method for \code{easybgm} objects}
 \usage{
-\method{summary}{easybgm}(x, evidence_thresh = 10, ...)
+\method{summary}{easybgm}(object, evidence_thresh = 10, ...)
 }
 \arguments{
-\item{x}{easybgm object}
+\item{object}{easybgm object}
 
 \item{evidence_thresh}{Bayes Factor which will be considered sufficient evidence for in-/exclusion, default is 10.}
+
+\item{...}{unused argument}
 }
 \description{
-Summary function for easybgm objects
+Used to create a object of easybgm results and in turn print it
 }

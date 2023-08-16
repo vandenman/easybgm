@@ -15,7 +15,7 @@ plot_edgeevidence(output, evidence_thresh = 10, split = F, show = "all", ...)
 
 \item{show}{specifies which edges should be shown, indicated by "all", "included", "inconclusive", "excluded"}
 
-\item{...}{Additional \code{qgraph} arguments}
+\item{...}{Additional arguments passed onto \code{qgraph}}
 }
 \description{
 Edge evidence plot

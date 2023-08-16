@@ -10,6 +10,8 @@ plot_posteriorstructure(output, as.BF = FALSE, ...)
 \item{output}{Output object from the easybgm function}
 
 \item{as.BF}{if TRUE plots the y-axis as Bayes factor instead of posterior structure probability}
+
+\item{...}{Additional arguments passed onto \code{ggplot2}}
 }
 \description{
 Plot Posterior Structure Probabilities

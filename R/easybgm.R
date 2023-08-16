@@ -98,6 +98,7 @@
 #' @importFrom bgms bgm
 #' @importFrom BDgraph bdgraph bdgraph.mpl plinks
 #' @importFrom BGGM explore select
+#' @importFrom utils packageVersion
 #'
 #' @examples
 #' \donttest{

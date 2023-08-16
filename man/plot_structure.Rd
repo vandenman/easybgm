@@ -9,7 +9,7 @@ plot_structure(output, ...)
 \arguments{
 \item{output}{Output object from the easybgm function}
 
-\item{...}{Additional \code{qgraph} arguments}
+\item{...}{Additional arguments passed onto \code{qgraph}}
 }
 \description{
 Structure plot

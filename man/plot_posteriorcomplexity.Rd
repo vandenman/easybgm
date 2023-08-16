@@ -8,6 +8,8 @@ plot_posteriorcomplexity(output, ...)
 }
 \arguments{
 \item{output}{Output object from the easybgm function}
+
+\item{...}{Additional arguments passed onto \code{ggplot2}}
 }
 \description{
 Plot posterior structure complexity

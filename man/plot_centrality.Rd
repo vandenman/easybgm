@@ -8,6 +8,8 @@ plot_centrality(output, ...)
 }
 \arguments{
 \item{output}{Output object from the easybgm function}
+
+\item{...}{Additional arguments passed onto \code{ggplot2}}
 }
 \description{
 Plot centrality measures and 95\% highest density interval
