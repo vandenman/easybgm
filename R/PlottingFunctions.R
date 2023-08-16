@@ -17,7 +17,7 @@ plot_posteriorstructure <- function(output, as.BF = FALSE, ...) {
     stop("The plot cannot be obtained for models estimated with BGGM. Suggestion: Change the package to BDgraph.",
          call. = FALSE)
   }
-  
+
   default_args <- list(
     xlab = "Structures",
     ylab = ifelse(as.BF == TRUE, expression(log(BF[1][s])), "Posterior Structure Probability"),
@@ -26,15 +26,15 @@ plot_posteriorstructure <- function(output, as.BF = FALSE, ...) {
     panel.grid.minor = element_blank(),
     axis.line = element_line(colour = "black", size = 1.1),
     axis.title = element_text(size = 16),
-    axis.text = element_text(size = 14), 
+    axis.text = element_text(size = 14),
     axis.ticks.length = unit(.25, "cm")
   )
-  
+
   args <- set_defaults(default_args, ...)
   sorted_structure_prob <- as.data.frame(sort(output$structure_probabilities, decreasing=T))
   colnames(sorted_structure_prob) <- "posterior_prob"
   if(as.BF){
-    
+
     BF1s <- sorted_structure_prob$posterior_prob[1] / sorted_structure_prob$posterior_prob # BF best structure vs. others
     data <- data.frame(structures = 1:length(BF1s), BayesFactor = BF1s)
     ggplot2::ggplot(data, aes(x = structures, y = BayesFactor)) +
@@ -80,7 +80,7 @@ plot_posteriorcomplexity <- function(output, ...) {
     stop("The plot cannot be obtained for models estimated with BGGM. Suggestion: Change the package to BDgraph.",
          call. = FALSE)
   }
-  
+
   default_args <- list(
     xlab = "Complexity",
     ylab = "Posterior Complexity Probability",
@@ -92,13 +92,13 @@ plot_posteriorcomplexity <- function(output, ...) {
     axis.line = element_line(colour = "black", size = 1.1),
     axis.ticks = element_line(size=.8),
     legend.text = element_text(size = 14),
-    
+
     axis.ticks.length = unit(.2, "cm"),
     axis.title.x = element_text(size = 18, face = "bold"),
     axis.title.y = element_text(size = 18, face = "bold"),
     panel.grid.major = element_blank()
   )
-  
+
   args <- set_defaults(default_args, ...)
   complexity <- c()
   for(i in 1:length(output$sample_graph)){
@@ -142,7 +142,7 @@ plot_edgeevidence <- function(output, evidence_thresh = 10, split = F, show = "a
   if(!any(class(output) == "easybgm")){
     stop("Wrong input provided. The function requires as input the output of the easybgm function.")
   }
-  
+
   default_args <- list(
     colors = c("#36648b", "#990000", "#bfbfbf"),
     colnames = colnames(output$parameters),
@@ -154,15 +154,15 @@ plot_edgeevidence <- function(output, evidence_thresh = 10, split = F, show = "a
     edge.width = 3,
     label.cex = 1,
     legend.cex = .8
-    
+
   )
   args <- set_defaults(default_args, ...)
   graph <- output$BF
   diag(graph) <- 1
-  
+
   # assign a color to each edge (inclusion - blue, exclusion - red, no conclusion - grey)
   graph_color <- graph
-  graph_color <-  ifelse(graph < evidence_thresh & graph > 1/evidence_thresh, 
+  graph_color <-  ifelse(graph < evidence_thresh & graph > 1/evidence_thresh,
                          graph_color <- args$colors[3], graph_color <- args$colors[1])
   graph_color[graph < (1/evidence_thresh)] <- args$colors[2]
 
@@ -289,7 +289,7 @@ plot_network <- function(output, exc_prob = .5, dashed = F, ...) {
     legend.cex = .8
   )
   args <- set_defaults(default_args, ...)
-  
+
   # Exclude edges with a inclusion probability lower exc_prob
   inc_probs_m <- output$inc_probs
   graph[inc_probs_m < exc_prob] <- 0
@@ -298,7 +298,7 @@ plot_network <- function(output, exc_prob = .5, dashed = F, ...) {
   # Plot
   if(dashed == T){
     graph_dashed <- ifelse(output$BF < args$evidence_thres, "dashed", "solid")
-    qgraph::qgraph(graph, lty = graph_dashed, 
+    qgraph::qgraph(graph, lty = graph_dashed,
                    theme = args$theme, vsize = args$vsize,
                    nodeNames = args$nodeNames,
                    legend = args$legend,
@@ -351,7 +351,7 @@ plot_structure <- function(output, ...) {
 #' @import ggplot2 HDInterval
 #'
 plot_parameterHDI <- function(output, ...) {
-  
+
   if(!any(class(output) == "easybgm")){
     stop("Wrong input provided. The function requires as input the output of the easybgm function.")
   }
@@ -359,7 +359,7 @@ plot_parameterHDI <- function(output, ...) {
   if(is.null(output$samples_posterior)){
     stop("Samples of the posterior distribution required. When estimating the model, set \"save = TRUE\".")
   }
-  
+
   def_args <- list(
     theme_ = theme_bw(),
     geom_pointrange = geom_pointrange(position = position_dodge(width = c(0.3)),
@@ -377,7 +377,7 @@ plot_parameterHDI <- function(output, ...) {
     plot.title = element_text(size = 18, face = "bold")
     )
   )
-  
+
   args <- set_defaults(def_args, ...)
   hdi_intervals <- as.data.frame(apply(output$samples_posterior, MARGIN = 2, FUN = hdi))
   posterior_medians <- apply(output$samples_posterior, MARGIN = 2, FUN = median)
@@ -415,11 +415,12 @@ plot_parameterHDI <- function(output, ...) {
 #'
 #' @param output Output object from the easybgm function
 #'
+#' @importFrom dplyr arrange
 #' @export
 #'
 
 
-plot_centrality <- function(output){
+plot_centrality <- function(output, ...){
 
   if(!any(class(output) == "easybgm")){
     stop("Wrong input provided. The function requires as input the output of the easybgm function.")
@@ -428,15 +429,15 @@ plot_centrality <- function(output){
   if(is.null(output$centrality)){
     stop("Centrality results are required. When estimating the model, set \"centrality = TRUE\".")
   }
-  
+
   default_args <- list(
     ylab = "Value",
     xlab = "Nodes",
-    geom_errorbar = geom_errorbar(aes(y=value, ymin = lower, ymax = upper)
+    geom_errorbar = geom_errorbar(aes(y=mean, ymin = lower, ymax = upper)
                                   , size =.5, width=.4)
-    
+
   )
-  
+
   args <- set_defaults(default_args, ...)
   cent_samples <- output$centrality
   p <- ncol(output$parameters)
@@ -451,7 +452,7 @@ plot_centrality <- function(output){
                                  upper = centrality_hdi[2, ])
 
   centrality_summary |>
-    arrange(mean) |>
+    dplyr::arrange(mean) |>
     ggplot(aes(x = node, y=mean))+
     geom_point()+
     args$geom_errorbar+

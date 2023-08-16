@@ -4,7 +4,7 @@
 \alias{plot_centrality}
 \title{Plot centrality measures and 95\% highest density interval}
 \usage{
-plot_centrality(output)
+plot_centrality(output, ...)
 }
 \arguments{
 \item{output}{Output object from the easybgm function}
