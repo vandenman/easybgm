@@ -331,17 +331,27 @@ plot_network <- function(output, exc_prob = .5, dashed = F, ...) {
 
 plot_structure <- function(output, ...) {
   default_args <- list(
+    layout_avg = qgraph::averageLayout(output$parameters*output$structure),
+    theme = "TeamFortress",
+    vsize = 10,
     nodeNames = colnames(output$parameters),
-    legend = TRUE
+    legend = T,
+    label.cex = 1.2,
+    legend.cex = .6
   )
   args <- set_defaults(default_args, ...)
   if(!any(class(output) == "easybgm")){
     stop("Wrong input provided. The function requires as input the output of the easybgm function.")
   }
   graph <- output$structure
-
+  colnames(graph) <- colnames(output$parameters)
   # Plot
-  qgraph::qgraph(graph, legend = args$legend, nodeNames = args$nodeNames, ...)
+  qgraph::qgraph(graph, layout = args$layout_avg,
+                 theme = args$theme, vsize = args$vsize,
+                 nodeNames = args$nodeNames,
+                 legend = args$legend,
+                 label.cex = args$label.cex,
+                 legend.cex = args$legend.cex, ...)
 
 }
 
