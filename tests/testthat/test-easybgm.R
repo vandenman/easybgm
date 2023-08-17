@@ -9,7 +9,7 @@ suppressPackageStartupMessages({
 set.seed(123)
 data <- na.omit(Wenchuan)
 res_bgms <- easybgm(data[1:100, 1:5], type = "ordinal",
-                    package = "bgms", save = T)
+                    package = "bgms", save = T, centrality = T)
 test_that("easybgm works for bgms", {
   testthat::expect_snapshot(summary(res_bgms))
 })
@@ -42,12 +42,16 @@ vdiffr::expect_doppelganger("structure plot bgms", struc_bgms)
 HDI_bgms <-plot_parameterHDI(res_bgms)
 vdiffr::expect_doppelganger("HDI plot bgms", HDI_bgms)
 
+# 7. centrality plot
+centrality_bgms <-plot_centrality(res_bgms)
+vdiffr::expect_doppelganger("centrality plot bgms", centrality_bgms)
+
 ##--------------------------------
 ## Fitting with BDgraph
 ##--------------------------------
 set.seed(123)
 res_bdgraph <- easybgm(data[1:100, 1:5], type = "continuous",
-                    package = "BDgraph", save = T)
+                    package = "BDgraph", save = T, centrality = T)
 test_that("easybgm works for bdgraph", {
   testthat::expect_snapshot(summary(res_bdgraph))
 })
@@ -79,6 +83,10 @@ vdiffr::expect_doppelganger("structure plot Bdgraph", struc_bdgraph)
 # 6. HDI plot
 HDI_bdgraph <-plot_parameterHDI(res_bdgraph)
 vdiffr::expect_doppelganger("HDI plot Bdgraph", HDI_bdgraph)
+
+# 7. centrality plot
+centrality_bdgraph <-plot_centrality(res_bdgraph)
+vdiffr::expect_doppelganger("centrality plot Bdgraph", centrality_bdgraph)
 
 ##--------------------------------
 ## Fitting with BGGM

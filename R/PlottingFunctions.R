@@ -439,19 +439,21 @@ plot_centrality <- function(output, ...){
   }
 
   default_args <- list(
-    theme_ = theme_bw(),
-    ylab = "Value",
+    theme_ = theme_minimal(),
+    ylab = "Strength Centrality",
     xlab = "Nodes",
     geom_errorbar = geom_errorbar(aes(y=.data$mean, ymin = .data$lower, ymax = .data$upper)
-                                  , size =.5, width=.4),
+                                  , linewidth =.5, width=.4),
     theme = theme(
-      axis.text = element_text(size=8),
+      axis.text = element_text(size=16),
       panel.border = element_blank(),
       axis.line = element_line(colour = "black", linewidth = 1.1),
       axis.ticks.length = unit(.2, "cm"),
       axis.ticks = element_line(linewidth = .8),
-      axis.title.x = element_text(size = 16, face = "bold"),
-      plot.title = element_text(size = 18, face = "bold")
+      axis.title.x = element_text(size = 18, face = "bold"),
+      axis.title.y = element_text(size = 18, face = "bold"),
+      plot.title = element_text(size = 18, face = "bold"),
+      panel.grid.major = element_blank()
     )
   )
 
@@ -470,13 +472,14 @@ plot_centrality <- function(output, ...){
 
   centrality_summary |>
     dplyr::arrange(mean) |>
+    dplyr::mutate(node = factor(.data$node, levels = .data$node)) |>
     ggplot(aes(x = .data$node, y=.data$mean, ...))+
-    args$theme_ + 
+    args$theme_ +
     geom_point()+
     args$geom_errorbar+
     coord_flip() +
     ylab(args$ylab) +
-    xlab(args$xlab) + 
+    xlab(args$xlab) +
     args$theme
 }
 
