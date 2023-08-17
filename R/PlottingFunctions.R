@@ -22,13 +22,15 @@ plot_posteriorstructure <- function(output, as.BF = FALSE, ...) {
   default_args <- list(
     xlab = "Structures",
     ylab = ifelse(as.BF == TRUE, expression(log(BF[1][s])), "Posterior Structure Probability"),
-    theme = theme_classic(),
-    panel.grid.major = element_blank(),
-    panel.grid.minor = element_blank(),
+    theme = theme_minimal(),
+    axis.text.size = 16,
+    panel.border = element_blank(),
     axis.line = element_line(colour = "black", linewidth = 1.1),
-    axis.title = element_text(size = 16),
-    axis.text = element_text(size = 14),
-    axis.ticks.length = unit(.25, "cm")
+    axis.ticks = element_line(linewidth = .8),
+    axis.ticks.length = unit(.2, "cm"),
+    axis.title.x = element_text(size = 18, face = "bold"),
+    axis.title.y = element_text(size = 18, face = "bold"),
+    panel.grid.major = element_blank()
   )
 
   args <- set_defaults(default_args, ...)
@@ -38,27 +40,33 @@ plot_posteriorstructure <- function(output, as.BF = FALSE, ...) {
 
     BF1s <- sorted_structure_prob$posterior_prob[1] / sorted_structure_prob$posterior_prob # BF best structure vs. others
     data <- data.frame(structures = 1:length(BF1s), BayesFactor = BF1s)
-    ggplot2::ggplot(data, aes(x = .data$structures, y = .data$BayesFactor)) +
-      geom_point(size = 4, shape = 1, ...) +
+    ggplot2::ggplot(data, aes(x = .data$structures, y = .data$BayesFactor, ...)) +
+      geom_point(size = 3) +
       scale_y_continuous(trans = "log10") +
       args$theme +
       labs(x = args$xlab,
            y = args$ylab) +
-      theme(panel.grid.major = args$panel.grid.major,
-            panel.grid.minor = args$panel.grid.minor, axis.line = args$axis.line,
-            axis.text = args$axis.text, axis.title = args$axis.title,
-            axis.ticks.length = args$axis.ticks.length)
+      theme(legend.position = args$legend.position, axis.text=element_text(size=args$axis.text.size),
+            legend.background =  args$legend.background, panel.border = args$panel.border,
+            axis.line = args$axis.line, axis.ticks.length=args$axis.ticks.length,
+            axis.ticks = args$axis.ticks, legend.text = args$legend.text,
+            axis.title.x = args$axis.title.x,
+            axis.title.y = args$axis.title.y,
+            panel.grid.major = args$panel.grid.major)
   } else {
     data <- data.frame(structures = 1:nrow(sorted_structure_prob), Probs = sorted_structure_prob)
     ggplot2::ggplot(data, aes(x = .data$structures, y = .data$posterior_prob, ...)) +
-      geom_point(size = 4, shape = 1) +
+      geom_point(size = 3) +
       args$theme +
       labs(x = args$xlab,
            y = args$ylab) +
-      theme(panel.grid.major = args$panel.grid.major,
-            panel.grid.minor = args$panel.grid.minor, axis.line = args$axis.line,
-            axis.text = args$axis.text, axis.title = args$axis.text,
-            axis.ticks.length = args$axis.ticks.length)
+      theme(legend.position = args$legend.position, axis.text=element_text(size=args$axis.text.size),
+            legend.background =  args$legend.background, panel.border = args$panel.border,
+            axis.line = args$axis.line, axis.ticks.length=args$axis.ticks.length,
+            axis.ticks = args$axis.ticks, legend.text = args$legend.text,
+            axis.title.x = args$axis.title.x,
+            axis.title.y = args$axis.title.y,
+            panel.grid.major = args$panel.grid.major)
   }
 }
 
@@ -87,14 +95,10 @@ plot_posteriorcomplexity <- function(output, ...) {
     xlab = "Complexity",
     ylab = "Posterior Complexity Probability",
     theme = theme_minimal(),
-    legend.position = c(.85, .25),
-    axis.text.size = 20,
-    legend.background = element_rect(fill = NULL),
+    axis.text.size = 16,
     panel.border = element_blank(),
     axis.line = element_line(colour = "black", linewidth = 1.1),
     axis.ticks = element_line(linewidth = .8),
-    legend.text = element_text(size = 14),
-
     axis.ticks.length = unit(.2, "cm"),
     axis.title.x = element_text(size = 18, face = "bold"),
     axis.title.y = element_text(size = 18, face = "bold"),
@@ -113,7 +117,7 @@ plot_posteriorcomplexity <- function(output, ...) {
     dplyr::mutate(complexity_weight = .data$complexity_weight/sum(.data$complexity_weight))
 
   ggplot(data_complexity, aes(x = .data$complexity, y = .data$complexity_weight, ...)) +
-    geom_point() +
+    geom_point(size = 3) +
     ylab(args$ylab) +
     xlab(args$xlab)  +
     args$theme +
