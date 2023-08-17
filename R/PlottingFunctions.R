@@ -277,6 +277,7 @@ plot_network <- function(output, exc_prob = .5, dashed = F, ...) {
   }
   graph <- output$parameters
   default_args <- list(
+    layout_avg = qgraph::averageLayout(output$parameters*output$structure),
     evidence_thres = 10,
     theme = "TeamFortress",
     vsize = 10,
@@ -295,14 +296,14 @@ plot_network <- function(output, exc_prob = .5, dashed = F, ...) {
   # Plot
   if(dashed == T){
     graph_dashed <- ifelse(output$BF < args$evidence_thres, "dashed", "solid")
-    qgraph::qgraph(graph, lty = graph_dashed,
+    qgraph::qgraph(graph, layout = args$layout_avg, lty = graph_dashed,
                    theme = args$theme, vsize = args$vsize,
                    nodeNames = args$nodeNames,
                    legend = args$legend,
                    label.cex = args$label.cex,
                    legend.cex = args$legend.cex, ...)
   } else {
-    qgraph::qgraph(graph, theme = args$theme, vsize = args$vsize,
+    qgraph::qgraph(graph, theme = args$theme, layout = args$layout_avg, vsize = args$vsize,
                    nodeNames = args$nodeNames,
                    legend = args$legend,
                    label.cex = args$label.cex,
