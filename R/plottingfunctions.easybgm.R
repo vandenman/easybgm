@@ -5,12 +5,10 @@
 #' @param output Output object from the easybgm function
 #' @param as.BF if TRUE plots the y-axis as Bayes factor instead of posterior structure probability
 #' @param ... Additional arguments passed onto `ggplot2`
-#'
-#' @export
 #' @importFrom dplyr group_by summarise mutate group_modify filter
 #'
 
-plot_posteriorstructure <- function(output, as.BF = FALSE, ...) {
+plot_posteriorstructure.easybgm <- function(output, as.BF = FALSE, ...) {
   if(!any(class(output) == "easybgm")){
     stop("Wrong input provided. The function requires as input the output of the easybgm function.")
   }
@@ -77,12 +75,10 @@ plot_posteriorstructure <- function(output, as.BF = FALSE, ...) {
 #'
 #' @param output Output object from the easybgm function
 #' @param ... Additional arguments passed onto `ggplot2`
-#'
-#' @export
 #' @import ggplot2
 #'
 
-plot_posteriorcomplexity <- function(output, ...) {
+plot_posteriorcomplexity.easybgm <- function(output, ...) {
   if(!any(class(output) == "easybgm")){
     stop("Wrong input provided. The function requires as input the output of the easybgm function.")
   }
@@ -142,9 +138,7 @@ plot_posteriorcomplexity <- function(output, ...) {
 #' @param show specifies which edges should be shown, indicated by "all", "included", "inconclusive", "excluded"
 #' @param ... Additional arguments passed onto `qgraph`
 #'
-#' @export
-#'
-plot_edgeevidence <- function(output, evidence_thresh = 10, split = F, show = "all", ...) {
+plot_edgeevidence.easybgm <- function(output, evidence_thresh = 10, split = F, show = "all", ...) {
 if(!any(class(output) == "easybgm")){
     stop("Wrong input provided. The function requires as input the output of the easybgm function.")
   }
@@ -268,10 +262,7 @@ if(!any(class(output) == "easybgm")){
 #' @param dashed binary parameter indicating whether edges with inconclusive evidence should be dashed
 #' @param ... Additional arguments passed onto `qgraph`
 
-#'
-#' @export
-
-plot_network <- function(output, exc_prob = .5, dashed = F, ...) {
+plot_network.easybgm <- function(output, exc_prob = .5, dashed = F, ...) {
   if(!any(class(output) == "easybgm")){
     stop("Wrong input provided. The function requires as input the output of the easybgm function.")
   }
@@ -324,12 +315,10 @@ plot_network <- function(output, exc_prob = .5, dashed = F, ...) {
 #' @param output Output object from the easybgm function
 #' @param ... Additional arguments passed onto `qgraph`
 #'
-#' @export
-#'
 #' @import qgraph
 #'
 
-plot_structure <- function(output, ...) {
+plot_structure.easybgm <- function(output, ...) {
   default_args <- list(
     layout_avg = qgraph::averageLayout(output$parameters*output$structure),
     theme = "TeamFortress",
@@ -361,12 +350,10 @@ plot_structure <- function(output, ...) {
 #'
 #' @param output Output object from the easybgm function
 #' @param ... Additional arguments passed onto `ggplot2`
-#'
-#' @export
 #' @import ggplot2 HDInterval
 #' @importFrom stats median
 #'
-plot_parameterHDI <- function(output, ...) {
+plot_parameterHDI.easybgm <- function(output, ...) {
 
   if(!any(class(output) == "easybgm")){
     stop("Wrong input provided. The function requires as input the output of the easybgm function.")
@@ -438,7 +425,7 @@ plot_parameterHDI <- function(output, ...) {
 #'
 
 
-plot_centrality <- function(output, ...){
+plot_centrality.easybgm <- function(output, ...){
 
   if(!any(class(output) == "easybgm")){
     stop("Wrong input provided. The function requires as input the output of the easybgm function.")
