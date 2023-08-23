@@ -266,12 +266,13 @@ if(!any(class(output) == "easybgm")){
 #' @param output Output object from the easybgm function
 #' @param exc_prob threshold for excluding edges; all edges with a lower inclusion probability will not be shown
 #' @param dashed binary parameter indicating whether edges with inconclusive evidence should be dashed
+#' @param evidence_thresh If dashed = TRUE, users can specify the threshold for sufficient evidence for inclusion.
 #' @param ... Additional arguments passed onto `qgraph`
 
 #'
 #' @export
 
-plot_network <- function(output, exc_prob = .5, dashed = F, ...) {
+plot_network <- function(output, exc_prob = .5, dashed = F, evidence_thresh = 10, ...) {
   if(!any(class(output) == "easybgm")){
     stop("Wrong input provided. The function requires as input the output of the easybgm function.")
   }
@@ -299,7 +300,7 @@ plot_network <- function(output, exc_prob = .5, dashed = F, ...) {
 
   # Plot
   if(dashed == T){
-    graph_dashed <- ifelse(output$BF < args$evidence_thres, "dashed", "solid")
+    graph_dashed <- ifelse(output$BF < evidence_thresh, "dashed", "solid")
     qgraph::qgraph(graph, layout = args$layout_avg, lty = graph_dashed,
                    theme = args$theme, vsize = args$vsize,
                    nodeNames = args$nodeNames,
