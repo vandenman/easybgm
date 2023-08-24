@@ -1,8 +1,8 @@
 # 1. Turns vector into matrix
-vector2matrix <- function(vec, p, diag = F, bycolumn = F) {
+vector2matrix <- function(vec, p, diag = FALSE, bycolumn = FALSE) {
   m <- matrix(0, p, p)
 
-  if(bycolumn == F){
+  if(!bycolumn){
     m[lower.tri(m, diag = diag)] <- vec
     m <- t(m)
     m[lower.tri(m)] <- t(m)[lower.tri(m)]
@@ -98,11 +98,11 @@ centrality_all <- function(res){
   for(i in 1:Nsamples){
 
     #Strength
-    strength_samples <- rowSums(abs(vector2matrix(samples[i, ], p, bycolumn = T)))
+    strength_samples <- rowSums(abs(vector2matrix(samples[i, ], p, bycolumn = TRUE)))
     #EI
-    influence_samples <- rowSums(vector2matrix(samples[i, ], p, bycolumn = T))
+    influence_samples <- rowSums(vector2matrix(samples[i, ], p, bycolumn = TRUE))
 
-    DistMat <- 1/(ifelse(abs(vector2matrix(samples[i, ], p, bycolumn = T))==0,0,abs(vector2matrix(samples[i, ], p, bycolumn = T))))
+    DistMat <- 1/(ifelse(abs(vector2matrix(samples[i, ], p, bycolumn = TRUE))==0,0,abs(vector2matrix(samples[i, ], p, bycolumn = T))))
     igraphObject <- igraph::graph.adjacency(DistMat, weighted = TRUE, mode = "undirected")
     # Closeness
     closeness_samples <- igraph::closeness(igraphObject)

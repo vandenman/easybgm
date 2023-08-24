@@ -1,14 +1,5 @@
-
-
-#' Plot Posterior Structure Probabilities
-#'
-#' @param output Output object from the easybgm function
-#' @param as.BF if TRUE plots the y-axis as Bayes factor instead of posterior structure probability
-#' @param ... Additional arguments passed onto `ggplot2`
-#' @importFrom dplyr group_by summarise mutate group_modify filter
-#'
-
-plot_posteriorstructure.easybgm <- function(output, as.BF = FALSE, ...) {
+#' @export
+plot_structure_probabilities.easybgm <- function(output, as.BF = FALSE, ...) {
   if(!any(class(output) == "easybgm")){
     stop("Wrong input provided. The function requires as input the output of the easybgm function.")
   }
@@ -69,16 +60,8 @@ plot_posteriorstructure.easybgm <- function(output, as.BF = FALSE, ...) {
 }
 
 # ---------------------------------------------------------------------------------------------------------------
-
-
-#' Plot posterior structure complexity
-#'
-#' @param output Output object from the easybgm function
-#' @param ... Additional arguments passed onto `ggplot2`
-#' @import ggplot2
-#'
-
-plot_posteriorcomplexity.easybgm <- function(output, ...) {
+#' @export
+plot_complexity_probabilities.easybgm <- function(output, ...) {
   if(!any(class(output) == "easybgm")){
     stop("Wrong input provided. The function requires as input the output of the easybgm function.")
   }
@@ -129,16 +112,8 @@ plot_posteriorcomplexity.easybgm <- function(output, ...) {
 }
 
 # ---------------------------------------------------------------------------------------------------------------
-
-#' Edge evidence plot
-#'
-#' @param output Output object from the easybgm function
-#' @param evidence_thresh Bayes Factor which will be considered sufficient evidence for in-/exclusion, default is 10.
-#' @param split if TRUE, plot is split in included and excluded edges
-#' @param show specifies which edges should be shown, indicated by "all", "included", "inconclusive", "excluded"
-#' @param ... Additional arguments passed onto `qgraph`
-#'
-plot_edgeevidence.easybgm <- function(output, evidence_thresh = 10, split = F, show = "all", ...) {
+#' @export
+plot_edgeevidence.easybgm <- function(output, evidence_thresh = 10, split = FALSE, show = "all", donotplot = FALSE, ...) {
 if(!any(class(output) == "easybgm")){
     stop("Wrong input provided. The function requires as input the output of the easybgm function.")
   }
@@ -167,11 +142,11 @@ if(!any(class(output) == "easybgm")){
   graph_color[graph < (1/evidence_thresh)] <- args$colors[2]
 
   if (show == "all") {
-    if (split == F) {
+    if (!split) {
       graph[output$inc_probs <= 1] <- 1
       diag(graph) <- 1
       colnames(graph) <- args$colnames
-      qgraph::qgraph(graph,
+      qgraph_plot <- qgraph::qgraph(graph,
                      edge.color = graph_color,
                      layout = args$layout_avg,# specifies the color of the edges
                      theme = args$theme,
@@ -185,7 +160,7 @@ if(!any(class(output) == "easybgm")){
       )
     }
 
-    if (split == T) {
+    if (split) {
 
       graph_inc <- graph_exc <- graph
       # plot included graph
@@ -193,8 +168,8 @@ if(!any(class(output) == "easybgm")){
       graph_inc[output$inc_probs < .5] <- 0
       diag(graph_inc) <- 1
       colnames(graph_inc) <- colnames(output$parameters)
-      qgraph::qgraph(graph_inc,
-                     edge_color = graph_color,
+      qgraph_plot1 <- qgraph::qgraph(graph_inc,
+                     edge.color = graph_color,
                      layout = args$layout_avg,# specifies the color of the edges
                      theme = args$theme,
                      vsize = args$vsize,
@@ -210,7 +185,7 @@ if(!any(class(output) == "easybgm")){
       graph_exc[output$inc_probs < .5] <- 1
       diag(graph_exc) <- 1
       colnames(graph_exc) <- colnames(output$parameters)
-      qgraph::qgraph(graph_exc,
+      qgraph_plot2 <- qgraph::qgraph(graph_exc,
                      edge.color = graph_color,
                      # specifies the color of the edges
                      layout = args$layout_avg,# specifies the color of the edges
@@ -238,7 +213,7 @@ if(!any(class(output) == "easybgm")){
       }
       diag(graph_show) <- 1
       colnames(graph_show) <- colnames(output$parameters)
-      qgraph::qgraph(graph_show,
+      qgraph_plot <- qgraph::qgraph(graph_show,
                      edge.color = graph_color,
                      layout = args$layout_avg,# specifies the color of the edges
                      theme = args$theme,
@@ -250,19 +225,22 @@ if(!any(class(output) == "easybgm")){
                      ...
       )
     }
-
+  if(donotplot && split){
+    return(invisible(list(qgraph_plot1, qgraph_plot2)))
+  } else if(donotplot && !split){
+    return(invisible(qgraph_plot))
+  } else if(!donotplot && split){
+    return(plot(qgraph_plot1))
+    return(plot(qgraph_plot2))
+  } else {
+    return(plot(qgraph_plot))
+  }
 }
 
 # ---------------------------------------------------------------------------------------------------------------
 
-#' Network plot
-#'
-#' @param output Output object from the easybgm function
-#' @param exc_prob threshold for excluding edges; all edges with a lower inclusion probability will not be shown
-#' @param dashed binary parameter indicating whether edges with inconclusive evidence should be dashed
-#' @param ... Additional arguments passed onto `qgraph`
-
-plot_network.easybgm <- function(output, exc_prob = .5, dashed = F, ...) {
+#' @export
+plot_network.easybgm <- function(output, exc_prob = 0.5, dashed = TRUE, donotplot = FALSE, ...) {
   if(!any(class(output) == "easybgm")){
     stop("Wrong input provided. The function requires as input the output of the easybgm function.")
   }
@@ -289,36 +267,32 @@ plot_network.easybgm <- function(output, exc_prob = .5, dashed = F, ...) {
   diag(graph) <- 1
 
   # Plot
-  if(dashed == T){
+  if(dashed){
     graph_dashed <- ifelse(output$BF < args$evidence_thres, "dashed", "solid")
-    qgraph::qgraph(graph, layout = args$layout_avg, lty = graph_dashed,
+    qgraph_plot <- qgraph::qgraph(graph, layout = args$layout_avg, lty = graph_dashed,
                    theme = args$theme, vsize = args$vsize,
                    nodeNames = args$nodeNames,
                    legend = args$legend,
                    label.cex = args$label.cex,
                    legend.cex = args$legend.cex, ...)
   } else {
-    qgraph::qgraph(graph, theme = args$theme, layout = args$layout_avg, vsize = args$vsize,
+    qgraph_plot <- qgraph::qgraph(graph, theme = args$theme, layout = args$layout_avg, vsize = args$vsize,
                    nodeNames = args$nodeNames,
                    legend = args$legend,
                    label.cex = args$label.cex,
                    legend.cex = args$legend.cex, ...)
 
   }
-
+  if(donotplot){
+    return(invisible(qgraph_plot))
+  } else {
+    return(plot(qgraph_plot))
+  }
 }
 
 # -------------------------------------------------
-
-#' Structure plot
-#'
-#' @param output Output object from the easybgm function
-#' @param ... Additional arguments passed onto `qgraph`
-#'
-#' @import qgraph
-#'
-
-plot_structure.easybgm <- function(output, ...) {
+#' @export
+plot_structure.easybgm <- function(output, donotplot = FALSE, ...) {
   default_args <- list(
     layout_avg = qgraph::averageLayout(output$parameters*output$structure),
     theme = "TeamFortress",
@@ -335,24 +309,21 @@ plot_structure.easybgm <- function(output, ...) {
   graph <- output$structure
   colnames(graph) <- colnames(output$parameters)
   # Plot
-  qgraph::qgraph(graph, layout = args$layout_avg,
+  qgraph_plot <- qgraph::qgraph(graph, layout = args$layout_avg,
                  theme = args$theme, vsize = args$vsize,
                  nodeNames = args$nodeNames,
                  legend = args$legend,
                  label.cex = args$label.cex,
                  legend.cex = args$legend.cex, ...)
-
+  if(donotplot){
+    return(invisible(qgraph_plot))
+  } else {
+    return(plot(qgraph_plot))
+  }
 }
 
 # ---------------------------------------------------------------------------------------------------------------
-
-#' Plot of interaction parameters and their 95% highest density intervals
-#'
-#' @param output Output object from the easybgm function
-#' @param ... Additional arguments passed onto `ggplot2`
-#' @import ggplot2 HDInterval
-#' @importFrom stats median
-#'
+#' @export
 plot_parameterHDI.easybgm <- function(output, ...) {
 
   if(!any(class(output) == "easybgm")){
@@ -412,19 +383,7 @@ plot_parameterHDI.easybgm <- function(output, ...) {
 
 
 # ---------------------------------------------------------------------------------------------------------------
-# Centrality plot
-
-#' Plot centrality measures and 95% highest density interval
-#'
-#' @param output Output object from the easybgm function
-#' @param ... Additional arguments passed onto `ggplot2`
-#'
-#' @importFrom dplyr arrange
-#' @importFrom ggplot2 .data
 #' @export
-#'
-
-
 plot_centrality.easybgm <- function(output, ...){
 
   if(!any(class(output) == "easybgm")){
@@ -470,7 +429,7 @@ plot_centrality.easybgm <- function(output, ...){
   centrality_summary |>
     dplyr::arrange(mean) |>
     dplyr::mutate(node = factor(.data$node, levels = .data$node)) |>
-    ggplot(aes(x = .data$node, y=.data$mean, ...))+
+    ggplot2::ggplot(aes(x = .data$node, y=.data$mean, ...))+
     args$theme_ +
     geom_point()+
     args$geom_errorbar+

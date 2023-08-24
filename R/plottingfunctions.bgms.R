@@ -1,17 +1,10 @@
+#' @export
 
-
-#' Plot Posterior Structure Probabilities
-#'
-#' @param output Output object from the easybgm function
-#' @param as.BF if TRUE plots the y-axis as Bayes factor instead of posterior structure probability
-#' @param ... Additional arguments passed onto `ggplot2`
-#' @importFrom dplyr group_by summarise mutate group_modify filter
-#'
-
-plot_posteriorstructure.bgms <- function(output, as.BF = FALSE, ...) {
+plot_structure_probabilities.bgms <- function(output, as.BF = FALSE, ...) {
 
   # Extract the results from bgms
-  res <- bgm_extract.package_bgms(fit = output, save = output$save,
+  res <- bgm_extract.package_bgms(fit = output, save = output$save, centrality = FALSE,
+                                  type = NULL, not.cont = NULL, data = NULL,
                                   edge_prior = output$edge_prior,
                                   inclusion_probability  = output$inclusion_probability,
                                   beta_bernoulli_alpha = output$beta_bernoulli_alpha,
@@ -34,7 +27,7 @@ plot_posteriorstructure.bgms <- function(output, as.BF = FALSE, ...) {
   )
 
   args <- set_defaults(default_args, ...)
-  sorted_structure_prob <- as.data.frame(sort(output$structure_probabilities, decreasing=T))
+  sorted_structure_prob <- as.data.frame(sort(output$structure_probabilities, decreasing = TRUE))
   colnames(sorted_structure_prob) <- "posterior_prob"
   if(as.BF){
 
@@ -72,18 +65,14 @@ plot_posteriorstructure.bgms <- function(output, as.BF = FALSE, ...) {
 
 # ---------------------------------------------------------------------------------------------------------------
 
-
-#' Plot posterior structure complexity
-#'
-#' @param output Output object from the easybgm function
-#' @param ... Additional arguments passed onto `ggplot2`
-#' @import ggplot2
+#' @export
 #'
 
-plot_posteriorcomplexity.bgms <- function(output, ...) {
+plot_complexity_probabilities.bgms <- function(output, ...) {
 
   # Extract the results from bgms
-  res <- bgm_extract.package_bgms(fit = output, save = output$save,
+  res <- bgm_extract.package_bgms(fit = output, save = output$save, centrality = FALSE,
+                                  type = NULL, not.cont = NULL, data = NULL,
                                   edge_prior = output$edge_prior,
                                   inclusion_probability  = output$inclusion_probability,
                                   beta_bernoulli_alpha = output$beta_bernoulli_alpha,
@@ -134,17 +123,12 @@ plot_posteriorcomplexity.bgms <- function(output, ...) {
 
 # ---------------------------------------------------------------------------------------------------------------
 
-#' Edge evidence plot
-#'
-#' @param output Output object from the easybgm function
-#' @param evidence_thresh Bayes Factor which will be considered sufficient evidence for in-/exclusion, default is 10.
-#' @param split if TRUE, plot is split in included and excluded edges
-#' @param show specifies which edges should be shown, indicated by "all", "included", "inconclusive", "excluded"
-#' @param ... Additional arguments passed onto `qgraph`
-#'
-plot_edgeevidence.bgms <- function(output, evidence_thresh = 10, split = F, show = "all", ...) {
+#' @export
+
+plot_edgeevidence.bgms <- function(output, evidence_thresh = 10, split = FALSE, show = "all", donotplot = FALSE,...) {
   # Extract the results from bgms
-  res <- bgm_extract.package_bgms(fit = output, save = output$save,
+  res <- bgm_extract.package_bgms(fit = output, save = output$save, centrality = FALSE,
+                                  type = NULL, not.cont = NULL, data = NULL,
                                   edge_prior = output$edge_prior,
                                   inclusion_probability  = output$inclusion_probability,
                                   beta_bernoulli_alpha = output$beta_bernoulli_alpha,
@@ -176,25 +160,25 @@ plot_edgeevidence.bgms <- function(output, evidence_thresh = 10, split = F, show
   graph_color[graph < (1/evidence_thresh)] <- args$colors[2]
 
   if (show == "all") {
-    if (split == F) {
+    if (!split) {
       graph[output$inc_probs <= 1] <- 1
       diag(graph) <- 1
       colnames(graph) <- args$colnames
-      qgraph::qgraph(graph,
-                     edge.color = graph_color,
-                     layout = args$layout_avg,# specifies the color of the edges
-                     theme = args$theme,
-                     vsize = args$vsize,
-                     nodeNames = args$nodeNames,
-                     legend = args$legend,
-                     edge.width = args$edge.width,
-                     label.cex = args$label.cex,
-                     legend.cex = args$legend.cex,
-                     ...
+      qgraph_plot <- qgraph::qgraph(graph,
+                                    edge.color = graph_color,
+                                    layout = args$layout_avg,# specifies the color of the edges
+                                    theme = args$theme,
+                                    vsize = args$vsize,
+                                    nodeNames = args$nodeNames,
+                                    legend = args$legend,
+                                    edge.width = args$edge.width,
+                                    label.cex = args$label.cex,
+                                    legend.cex = args$legend.cex,
+                                    ...
       )
     }
 
-    if (split == T) {
+    if (split) {
 
       graph_inc <- graph_exc <- graph
       # plot included graph
@@ -202,35 +186,35 @@ plot_edgeevidence.bgms <- function(output, evidence_thresh = 10, split = F, show
       graph_inc[output$inc_probs < .5] <- 0
       diag(graph_inc) <- 1
       colnames(graph_inc) <- colnames(output$parameters)
-      qgraph::qgraph(graph_inc,
-                     edge_color = graph_color,
-                     layout = args$layout_avg,# specifies the color of the edges
-                     theme = args$theme,
-                     vsize = args$vsize,
-                     nodeNames = args$nodeNames,
-                     legend = args$legend,
-                     edge.width = args$edge.width,
-                     label.cex = args$label.cex,
-                     legend.cex = args$legend.cex, # specifies the color of the edges
-                     ...
+      qgraph_plot1 <- qgraph::qgraph(graph_inc,
+                                     edge.color = graph_color,
+                                     layout = args$layout_avg,# specifies the color of the edges
+                                     theme = args$theme,
+                                     vsize = args$vsize,
+                                     nodeNames = args$nodeNames,
+                                     legend = args$legend,
+                                     edge.width = args$edge.width,
+                                     label.cex = args$label.cex,
+                                     legend.cex = args$legend.cex, # specifies the color of the edges
+                                     ...
       )
       # Plot excluded graph
       graph_exc[output$inc_probs >= .5] <- 0
       graph_exc[output$inc_probs < .5] <- 1
       diag(graph_exc) <- 1
       colnames(graph_exc) <- colnames(output$parameters)
-      qgraph::qgraph(graph_exc,
-                     edge.color = graph_color,
-                     # specifies the color of the edges
-                     layout = args$layout_avg,# specifies the color of the edges
-                     theme = args$theme,
-                     vsize = args$vsize,
-                     nodeNames = args$nodeNames,
-                     legend = args$legend,
-                     edge.width = args$edge.width,
-                     label.cex = args$label.cex,
-                     legend.cex = args$legend.cex,
-                     ...
+      qgraph_plot2 <- qgraph::qgraph(graph_exc,
+                                     edge.color = graph_color,
+                                     # specifies the color of the edges
+                                     layout = args$layout_avg,# specifies the color of the edges
+                                     theme = args$theme,
+                                     vsize = args$vsize,
+                                     nodeNames = args$nodeNames,
+                                     legend = args$legend,
+                                     edge.width = args$edge.width,
+                                     label.cex = args$label.cex,
+                                     legend.cex = args$legend.cex,
+                                     ...
       )
     }
   }
@@ -247,33 +231,37 @@ plot_edgeevidence.bgms <- function(output, evidence_thresh = 10, split = F, show
     }
     diag(graph_show) <- 1
     colnames(graph_show) <- colnames(output$parameters)
-    qgraph::qgraph(graph_show,
-                   edge.color = graph_color,
-                   layout = args$layout_avg,# specifies the color of the edges
-                   theme = args$theme,
-                   vsize = args$vsize,
-                   nodeNames = args$nodeNames,
-                   legend = args$legend,
-                   label.cex = args$label.cex,
-                   legend.cex = args$legend.cex,# specifies the color of the edges
-                   ...
+    qgraph_plot <- qgraph::qgraph(graph_show,
+                                  edge.color = graph_color,
+                                  layout = args$layout_avg,# specifies the color of the edges
+                                  theme = args$theme,
+                                  vsize = args$vsize,
+                                  nodeNames = args$nodeNames,
+                                  legend = args$legend,
+                                  label.cex = args$label.cex,
+                                  legend.cex = args$legend.cex,# specifies the color of the edges
+                                  ...
     )
   }
-
+  if(donotplot && split){
+    return(invisible(list(qgraph_plot1, qgraph_plot2)))
+  } else if(donotplot && !split){
+    return(invisible(qgraph_plot))
+  } else if(!donotplot && split){
+    return(plot(qgraph_plot1))
+    return(plot(qgraph_plot2))
+  } else {
+    return(plot(qgraph_plot))
+  }
 }
 
 # ---------------------------------------------------------------------------------------------------------------
+#' @export
 
-#' Network plot
-#'
-#' @param output Output object from the easybgm function
-#' @param exc_prob threshold for excluding edges; all edges with a lower inclusion probability will not be shown
-#' @param dashed binary parameter indicating whether edges with inconclusive evidence should be dashed
-#' @param ... Additional arguments passed onto `qgraph`
-
-plot_network.bgms <- function(output, exc_prob = .5, dashed = F, ...) {
+plot_network.bgms <- function(output, exc_prob = .5, dashed = FALSE, donotplot = FALSE,...) {
   # Extract the results from bgms
-  res <- bgm_extract.package_bgms(fit = output, save = output$save,
+  res <- bgm_extract.package_bgms(fit = output, save = output$save, centrality = FALSE,
+                                  type = NULL, not.cont = NULL, data = NULL,
                                   edge_prior = output$edge_prior,
                                   inclusion_probability  = output$inclusion_probability,
                                   beta_bernoulli_alpha = output$beta_bernoulli_alpha,
@@ -288,7 +276,7 @@ plot_network.bgms <- function(output, exc_prob = .5, dashed = F, ...) {
     theme = "TeamFortress",
     vsize = 10,
     nodeNames = colnames(output$parameters),
-    legend = T,
+    legend = TRUE,
     label.cex = 1.2,
     legend.cex = .6
   )
@@ -300,38 +288,38 @@ plot_network.bgms <- function(output, exc_prob = .5, dashed = F, ...) {
   diag(graph) <- 1
 
   # Plot
-  if(dashed == T){
+  if(dashed){
     graph_dashed <- ifelse(output$BF < args$evidence_thres, "dashed", "solid")
-    qgraph::qgraph(graph, layout = args$layout_avg, lty = graph_dashed,
-                   theme = args$theme, vsize = args$vsize,
-                   nodeNames = args$nodeNames,
-                   legend = args$legend,
-                   label.cex = args$label.cex,
-                   legend.cex = args$legend.cex, ...)
+    qgraph_plot <- qgraph::qgraph(graph, layout = args$layout_avg, lty = graph_dashed,
+                                  theme = args$theme, vsize = args$vsize,
+                                  nodeNames = args$nodeNames,
+                                  legend = args$legend,
+                                  label.cex = args$label.cex,
+                                  legend.cex = args$legend.cex, ...)
   } else {
-    qgraph::qgraph(graph, theme = args$theme, layout = args$layout_avg, vsize = args$vsize,
-                   nodeNames = args$nodeNames,
-                   legend = args$legend,
-                   label.cex = args$label.cex,
-                   legend.cex = args$legend.cex, ...)
+    qgraph_plot <- qgraph::qgraph(graph, theme = args$theme,
+                                  layout = args$layout_avg, vsize = args$vsize,
+                                  nodeNames = args$nodeNames,
+                                  legend = args$legend,
+                                  label.cex = args$label.cex,
+                                  legend.cex = args$legend.cex, ...)
 
   }
-
+  if(donotplot){
+    return(invisible(qgraph_plot))
+  } else {
+    return(plot(qgraph_plot))
+  }
 }
 
 # -------------------------------------------------
 
-#' Structure plot
-#'
-#' @param output Output object from the easybgm function
-#' @param ... Additional arguments passed onto `qgraph`
-#'
-#' @import qgraph
-#'
+#' @export
 
-plot_structure.bgms <- function(output, ...) {
+plot_structure.bgms <- function(output, donotplot = FALSE,...) {
   # Extract the results from bgms
-  res <- bgm_extract.package_bgms(fit = output, save = output$save,
+  res <- bgm_extract.package_bgms(fit = output, save = output$save, centrality = FALSE,
+                                  type = NULL, not.cont = NULL, data = NULL,
                                   edge_prior = output$edge_prior,
                                   inclusion_probability  = output$inclusion_probability,
                                   beta_bernoulli_alpha = output$beta_bernoulli_alpha,
@@ -344,7 +332,7 @@ plot_structure.bgms <- function(output, ...) {
     theme = "TeamFortress",
     vsize = 10,
     nodeNames = colnames(output$parameters),
-    legend = T,
+    legend = TRUE,
     label.cex = 1.2,
     legend.cex = .6
   )
@@ -355,31 +343,31 @@ plot_structure.bgms <- function(output, ...) {
   graph <- output$structure
   colnames(graph) <- colnames(output$parameters)
   # Plot
-  qgraph::qgraph(graph, layout = args$layout_avg,
-                 theme = args$theme, vsize = args$vsize,
-                 nodeNames = args$nodeNames,
-                 legend = args$legend,
-                 label.cex = args$label.cex,
-                 legend.cex = args$legend.cex, ...)
-
+  qgraph_plot <- qgraph::qgraph(graph, layout = args$layout_avg,
+                                theme = args$theme, vsize = args$vsize,
+                                nodeNames = args$nodeNames,
+                                legend = args$legend,
+                                label.cex = args$label.cex,
+                                legend.cex = args$legend.cex, ...)
+  if(donotplot){
+    return(invisible(qgraph_plot))
+  } else {
+    return(plot(qgraph_plot))
+  }
 }
 
 # ---------------------------------------------------------------------------------------------------------------
 
-#' Plot of interaction parameters and their 95% highest density intervals
-#'
-#' @param output Output object from the easybgm function
-#' @param ... Additional arguments passed onto `ggplot2`
-#' @import ggplot2 HDInterval
-#' @importFrom stats median
-#'
+#' @export
+
 plot_parameterHDI.bgms <- function(output, ...) {
-  if(output$save == FALSE){
+  if(!output$save){
     stop("Samples of the posterior distribution required. When estimating the model with bgm, set \"save = TRUE\".")
   }
 
   # Extract the results from bgms
-  res <- bgm_extract.package_bgms(fit = output, save = output$save,
+  res <- bgm_extract.package_bgms(fit = output, save = output$save, centrality = FALSE,
+                                  type = NULL, not.cont = NULL, data = NULL,
                                   edge_prior = output$edge_prior,
                                   inclusion_probability  = output$inclusion_probability,
                                   beta_bernoulli_alpha = output$beta_bernoulli_alpha,
@@ -409,7 +397,7 @@ plot_parameterHDI.bgms <- function(output, ...) {
   hdi_intervals <- as.data.frame(apply(output$samples_posterior, MARGIN = 2, FUN = hdi))
   posterior_medians <- apply(output$samples_posterior, MARGIN = 2, FUN = median)
 
-  names <- colnames(output$parameters)
+  names <- c(1:ncol(output$parameters))
   names_bycol <- matrix(rep(names, each = ncol(output$parameters)), ncol = ncol(output$parameters))
   names_byrow <- matrix(rep(names, each = ncol(output$parameters)), ncol = ncol(output$parameters), byrow = T)
   names_comb <- matrix(paste0(names_byrow, "-", names_bycol), ncol = ncol(output$parameters))
@@ -418,7 +406,7 @@ plot_parameterHDI.bgms <- function(output, ...) {
   posterior <- cbind(data.frame(posterior_medians, row.names = NULL),
                      data.frame(t(hdi_intervals), row.names = NULL), index)
   colnames(posterior) <- c("posterior_medians", "lower", "upper", "names")
-  posterior <- posterior[order(posterior$posterior_medians, decreasing = F),]
+  posterior <- posterior[order(posterior$posterior_medians, decreasing = FALSE),]
   posterior$names <- factor(posterior$names, levels = posterior$names)
 
 
@@ -436,27 +424,18 @@ plot_parameterHDI.bgms <- function(output, ...) {
 
 
 # ---------------------------------------------------------------------------------------------------------------
-# Centrality plot
 
-#' Plot centrality measures and 95% highest density interval
-#'
-#' @param output Output object from the easybgm function
-#' @param ... Additional arguments passed onto `ggplot2`
-#'
-#' @importFrom dplyr arrange
-#' @importFrom ggplot2 .data
 #' @export
-#'
-
 
 plot_centrality.bgms <- function(output, ...){
 
-  if(output$save == FALSE){
+  if(!output$save){
     stop("Samples of the posterior distribution required. When estimating the model with bgm, set \"save = TRUE\".")
   }
 
   # Extract the results from bgms
   res <- bgm_extract.package_bgms(fit = output, save = output$save, centrality = TRUE,
+                                  type = NULL, not.cont = NULL, data = NULL,
                                   edge_prior = output$edge_prior,
                                   inclusion_probability  = output$inclusion_probability,
                                   beta_bernoulli_alpha = output$beta_bernoulli_alpha,
@@ -490,7 +469,7 @@ plot_centrality.bgms <- function(output, ...){
   # Creating summary statistics
 
   centrality_means <- colMeans(cent_samples)
-  centrality_hdi <- apply(cent_samples, MARGIN = 2, FUN = hdi, allowSplit = F)
+  centrality_hdi <- apply(cent_samples, MARGIN = 2, FUN = hdi, allowSplit = FALSE)
   centrality_summary <- data.frame(node = colnames(output$parameters),
                                    mean = centrality_means,
                                    lower = centrality_hdi[1, ],

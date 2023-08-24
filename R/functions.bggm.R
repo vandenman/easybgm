@@ -39,10 +39,10 @@ bgm_extract.package_bggm <- function(fit, type, save,
   bggm_res$inc_probs <- out_select$BF_10/(out_select$BF_10 + 1)
   bggm_res$structure <- out_select$Adj_10
 
-  if(centrality == TRUE){
+  if(centrality){
     save <- TRUE
   }
-  if(save == TRUE){
+  if(save){
     p <- ncol(bggm_res$parameters)
     samples <- matrix(0, ncol = p*(p-1)/2, nrow = fit$iter)
     for(i in 1:fit$iter){
@@ -51,7 +51,7 @@ bgm_extract.package_bggm <- function(fit, type, save,
     }
     bggm_res$samples_posterior <- samples
 
-    if(centrality == TRUE){
+    if(centrality){
       # bggm_res$centrality_strength <- centrality_strength(bggm_res)
       bggm_res$centrality <- centrality(bggm_res)
     }

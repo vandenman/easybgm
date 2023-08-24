@@ -116,10 +116,10 @@ bgm_extract.package_bdgraph <- function(fit, type, save,
     # bdgraph_res$package <- "bdgraph"
     bdgraph_res$model <- "gcgm"
 
-    if(centrality == TRUE){
+    if(centrality){
       save <- TRUE
     }
-    if(save == TRUE){
+    if(save){
       #warning("Posterior samples cannot be extracted for mixed models with BDgraph at the moment. Results are provided without the posterior samples.")
 
       if(is.null(not.cont)){
@@ -132,7 +132,7 @@ bgm_extract.package_bdgraph <- function(fit, type, save,
       # Extract posterior samples
       bdgraph_res$samples_posterior <- extract_posterior(fit, data, method = model, not.cont = not.cont)[[1]]
 
-      if(centrality == TRUE){
+      if(centrality){
       # Centrality indices
       # bdgraph_res$centrality_strength <- centrality_strength(bdgraph_res)
       bdgraph_res$centrality <- centrality(bdgraph_res)
