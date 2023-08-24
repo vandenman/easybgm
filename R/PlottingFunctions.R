@@ -200,7 +200,7 @@ if(!any(class(output) == "easybgm")){
       diag(graph_inc) <- 1
       colnames(graph_inc) <- colnames(output$parameters)
       qgraph::qgraph(graph_inc,
-                     edge_color = graph_color,
+                     edge.color = graph_color,
                      layout = args$layout_avg,# specifies the color of the edges
                      theme = args$theme,
                      vsize = args$vsize,
