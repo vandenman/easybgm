@@ -67,8 +67,9 @@ bgm_extract.package_bgms <- function(fit, type, save,
                                      not.cont, data, centrality, ...){
   if(centrality) save <- TRUE
 
-  if(class(fit) != "bgms"){
+  if(any(class(fit) != "bgms")){
   fit <- fit$packagefit
+  save <- TRUE
   }
 
   if(packageVersion("bgms") > "0.1.0"){
@@ -104,11 +105,12 @@ bgm_extract.package_bgms <- function(fit, type, save,
   }
   bgms_res <- list()
   if(save){
-    p <- unlist(strsplit(colnames(fit$interactions)[ncol(fit$interactions)], ", "))[2]
-    p <- as.numeric(unlist(strsplit(p, ")"))[1])
+    p <- length(fit$colnames)
     bgms_res$parameters <- vector2matrix(colMeans(fit$interactions), p = p)
     if(!is.null(data)){
     colnames(bgms_res$parameters) <- rownames(bgms_res$parameters) <- colnames(data)
+    } else {
+      colnames(bgms_res$parameters) <- rownames(bgms_res$parameters) <- fit$colnames
     }
     bgms_res$inc_probs <- vector2matrix(colMeans(fit$gamma), p = p)
     bgms_res$BF <- (bgms_res$inc_probs/(1-bgms_res$inc_probs))/(edge.prior /(1-edge.prior))
