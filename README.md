@@ -1,7 +1,5 @@
 # easybgm: Easy Bayesian Graphical Modeling
 
-DISCLAIMER: The package is still undergoing rapid development and changes to functions or arguments may occur.
-
 The `R` package `easybgm` provides a user-friendly package for performing a Bayesian analysis of psychometric networks. In particular, it helps to fit, extract, and visualize the results of a Bayesian graphical model commonly used in the social-behavioral sciences. The package is a wrapper around existing packages. So far, the package supports fitting and extracting results of cross-sectional network models using `BDgraph` (Mohammadi & Wit, 2015), `BGGM`(Williams & Mulder, 2019), and `bgms` (Marsman & Haslbeck, 2023). As output, the package extracts the posterior parameter estimates, the posterior inclusion probability, the inclusion Bayes factor, and optionally posterior samples of the parameters and the nodes centrality. The package comes with an extensive suite of visualization functions.
 
 ## Installation
@@ -54,22 +52,70 @@ Researchers often use centrality measures to obtain aggregated information for e
 
 ## Example
 
-We want to illustrate the package use with an example. In particular, we use the Wenchuan data which can be loaded with the package `bgms`. We fit the model and extract its results with the function `easybgm`. We specify the data and the data type, which in this case is `ordinal`.
+We want to illustrate the package use with an example. In particular, we use the women and mathematics data which can be loaded with the package `BGGM`. We fit the model and extract its results with the function `easybgm`. We specify the data and the data type, which in this case is `binary`.
 
 ``` r
 library(easybgm)
-library(bgms)
+library(BGGM)
 
-data <- na.omit(Wenchuan)
-res <- easybgm(as.matrix(data), type = "ordinal")
-summary(res)
+data <- na.omit(women_math)
+colnames(women_math) <- c("LCA", "GND", "SCT", "NMF", "SBP", "FTP")
+
+res <- easybgm(data, type = "binary")
+
 ```
 
-Having fitted the model, we can now visualize its results. In a first step, we assess the edge evidence plot in which edges represent the inclusion Bayes factor $\text{BF}_{10}$. Especially in a large network like ours, it is useful to split the edge evidence plot in two parts by setting the `split` argument to `TRUE`. As such, the left plot shows edges with some evidence for inclusion (i.e., $\text{BF}_{10} > 1$), where blue edges represent evidence for inclusion ($\text{BF}_{10} > 10$) and grey edges absence of evidence ($1 < \text{BF}_{10} < 10$). The right edge evidence plot shows edges with some evidence for exclusion (i.e., $\text{BF}_{10} < 1$) with evidence for exclusion shown as red ($\text{BF}_{01} > 10$) and inconclusive evidence as grey ($0.1 < \text{BF}_{10} < 1$).
+Having fitted the model, we can now take a look at its results. 
+
+``` r
+summary(res)
+
+#>  BAYESIAN ANALYSIS OF NETWORKS 
+#>  Model type: binary 
+#>  Number of nodes: 6 
+#>  Fitting Package: bgms 
+#> --- 
+#>  EDGE SPECIFIC OVERVIEW 
+#>  Relation Estimate Posterior Incl. Prob. Inclusion BF Category
+#>   LCA-GND    0.000                 0.034        0.035 excluded
+#>   LCA-SCT    0.001                 0.027        0.028 excluded
+#>   GND-SCT    0.003                 0.043        0.044 excluded
+#>   LCA-NMF    0.001                 0.038        0.040 excluded
+#>   GND-NMF    0.508                 1.000          Inf included
+#>   SCT-NMF   -0.012                 0.084        0.092 excluded
+#>   LCA-SBP    0.001                 0.031        0.032 excluded
+#>   GND-SBP   -0.756                 1.000          Inf included
+#>   SCT-SBP    0.337                 0.982       54.556 included
+#>   NMF-SBP   -0.980                 1.000          Inf included
+#>   LCA-FTP   -0.004                 0.051        0.054 excluded
+#>   GND-FTP    0.000                 0.040        0.042 excluded
+#>   SCT-FTP    1.176                 1.000          Inf included
+#>   NMF-FTP    0.670                 1.000          Inf included
+#>   SBP-FTP   -0.014                 0.090        0.099 excluded
+#> 
+#> Bayes Factors larger than 10 were considered sufficient evidence for the categorization. 
+#>  --- 
+#>  AGGREGATED EDGE OVERVIEW 
+#>  Number of included edges: 6 
+#>  Number of inconclusive edges: 0 
+#>  Number of excluded edges: 9 
+#>  Number of possible edges: 15 
+#>  
+#>  --- 
+#>  STRUCTURE OVERVIEW 
+#>  Number of visited structures: 109 
+#>  Number of possible structures: 32768 
+#>  Posterior probability of most likely structure: 0.6264 
+#> ---
+```
+
+Furthermore, we can visualize the results with plots. In a first step, we assess the edge evidence plot in which edges represent the inclusion Bayes factor $\text{BF}_{10}$. Especially in a large network like ours, it is useful to split the edge evidence plot in two parts by setting the `split` argument to `TRUE`. As such, the left plot shows edges with some evidence for inclusion (i.e., $\text{BF}_{10} > 1$), where blue edges represent evidence for inclusion ($\text{BF}_{10} > 10$) and grey edges absence of evidence ($1 < \text{BF}_{10} < 10$). The right edge evidence plot shows edges with some evidence for exclusion (i.e., $\text{BF}_{10} < 1$) with evidence for exclusion shown as red ($\text{BF}_{01} > 10$) and inconclusive evidence as grey ($0.1 < \text{BF}_{10} < 1$).
 
 ``` r
 plot_edgeevidence(res, edge.width = 2, split = T)
 ```
+
+![](readme_plots/plot_edgeevidence.pdf)
 
 Furthermore, we can look at the network plot in which edges represent the partial associations.
 
@@ -79,27 +125,43 @@ plot_network(res, layout = "spring",
              theme = "TeamFortress", vsize = 6)
 ```
 
+![](readme_plots/plot_network.pdf)
+
 We can also assess the structure specifically with three plots. Note that this only works, if we use either the `BDgraph` or `bgms` package.
 
 ``` r
-plot_posteriorstructure(res, as.BF = F)
-plot_posteriorcomplexity(res, as.BF = F)
+plot_structure_probabilities(res, as.BF = F)
+```
+![](readme_plots/plot_structure_probabilities.pdf)
+
+
+``` r
+plot_complexity_probabilities(res, as.BF = F)
+```
+![](readme_plots/plot_complexity_probabilities.pdf)
+
+``` r
 plot_structure(res, layoutScale = c(.8,1), palette = "R",
                theme = "TeamFortress", vsize = 6, edge.width = .3, layout = "spring")
 ```
 
+![](readme_plots/plot_structure.pdf)
+
 In addition we can obtain posterior samples from the posterior distribution by setting `save = TRUE` in the `easybgm` function and thereby open up new possibilities of assessing the model. We can extract the posterior density of the parameters with a parameter forest plot.
 
 ``` r
-res <- easybgm(data, type = "ordinal", save = TRUE, centrality = TRUE)
+res <- easybgm(data, type = "binary", save = TRUE, centrality = TRUE)
 plot_parameterHDI(res)
 ```
+![](readme_plots/plot_parameterHDI.pdf)
 
 Furthermore, researcher can wish to aggregate the findings of the network model, commonly done with centrality measures. Due to the discussion around the meaningfulness of centrality measures in psychometric network models, we recommend users to stick to the strength centrality. To obtain the centrality measures, users need to set `save = TRUE` and `centrality = TRUE`, when estimating the network model with `easybgm`. The centrality measures can be inspected with the centrality plot.
 
 ``` r
 plot_centrality(res, measures = "Strength")
 ```
+
+![](readme_plots/plot_centrality.pdf)
 
 ## Background Information
 

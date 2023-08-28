@@ -239,8 +239,10 @@ if(!any(class(output) == "easybgm")){
 
 # ---------------------------------------------------------------------------------------------------------------
 
+
 #' @export
 plot_network.easybgm <- function(output, exc_prob = 0.5, evidence_thresh = 10,  dashed = TRUE, donotplot = FALSE, ...) {
+
   if(!any(class(output) == "easybgm")){
     stop("Wrong input provided. The function requires as input the output of the easybgm function.")
   }
