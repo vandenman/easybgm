@@ -258,7 +258,7 @@ plot_edgeevidence.bgms <- function(output, evidence_thresh = 10, split = FALSE, 
 # ---------------------------------------------------------------------------------------------------------------
 #' @export
 
-plot_network.bgms <- function(output, exc_prob = .5, dashed = FALSE, donotplot = FALSE,...) {
+plot_network.bgms <- function(output, exc_prob = .5, evidence_thresh = 10, dashed = FALSE, donotplot = FALSE,...) {
   # Extract the results from bgms
   res <- bgm_extract.package_bgms(fit = output, save = output$save, centrality = FALSE,
                                   type = NULL, not.cont = NULL, data = NULL,

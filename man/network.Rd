@@ -5,20 +5,27 @@
 \alias{plot_network}
 \title{Network plot}
 \usage{
-plot_network(output, exc_prob = 0.5, dashed = FALSE, donotplot = FALSE, ...)
+plot_network(
+  output,
+  exc_prob = 0.5,
+  evidence_thresh = 10,
+  dashed = FALSE,
+  donotplot = FALSE,
+  ...
+)
 }
 \arguments{
 \item{output}{Output object from the easybgm function. Supports also objects from the bgm function of the \code{bgms} package.}
 
 \item{exc_prob}{The threshold for excluding edges. All edges with a lower inclusion probability will not be shown. The default is set to 0.5 in line with the median probability plot.}
 
+\item{evidence_thresh}{If dashed = TRUE, users can specify the threshold for sufficient evidence for inclusion. All edges with evidence lower than \code{evidence_tresh} are dashed.}
+
 \item{dashed}{A binary parameter indicating whether edges with inconclusive evidence should be dashed. Default is FALSE.}
 
 \item{donotplot}{Runs function but does not plot (default is FALSE). Useful for saving the output (i.e. layout) without plotting.}
 
 \item{...}{Additional arguments passed onto \code{qgraph}.}
-
-\item{evidence_thresh}{If dashed = TRUE, users can specify the threshold for sufficient evidence for inclusion. All edges with evidence lower than \code{evidence_tresh} are dashed.}
 }
 \description{
 The network plot visualizes the strength of interactions between two nodes, the partial associations. Solely edges with a posterior inclusion probability larger than the \code{exc_prob} argument (default = 0.5) are shown. Edge thickness and saturation represent the strength of the association; the thicker the edge, the stronger the association. Red edges indicate negative relations and blue edges indicate positive associations.

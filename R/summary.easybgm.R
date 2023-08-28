@@ -118,10 +118,9 @@ print.easybgm <- function(x, ...){
   dots_check(...)
 
   if(is.null(x$n_inclu_edges)){
-    NextMethod("print")
-    #print(summary.easybgm(x))
-  }
-  if(any(class(x) == "package_bggm")){
+    #NextMethod("print")
+    print(summary.easybgm(x))
+  } else if(any(class(x) == "package_bggm")){
     cat("\n BAYESIAN ANALYSIS OF NETWORKS",
         "\n Model type:", x$model,
         "\n Number of nodes:", x$n_nodes,

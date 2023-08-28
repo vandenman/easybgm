@@ -21,8 +21,9 @@ plot_edgeevidence(
 
 \item{split}{if TRUE, plot is split in included and excluded edges. Note that by default separate plots are shown and appear after each other in the plot window. To show the plots side-by-side specify par(mfrow = c(1, 2)).}
 
-\item{show}{specifies which edges should be shown, indicated by "all", "included", "inconclusive", "excluded".
-#' @param donotplot Runs function but does not plot (default is FALSE). Useful for saving the output (i.e. layout) without plotting.}
+\item{show}{specifies which edges should be shown, indicated by "all", "included", "inconclusive", "excluded".}
+
+\item{donotplot}{Runs function but does not plot (default is FALSE). Useful for saving the output (i.e. layout) without plotting.}
 
 \item{...}{Additional arguments passed onto \code{qgraph}.}
 }

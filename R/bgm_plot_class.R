@@ -88,7 +88,7 @@ plot_complexity_probabilities <- function(output, ...) {
 #' @param evidence_thresh Bayes Factor which will be considered sufficient evidence for in-/exclusion, default is 10.
 #' @param split if TRUE, plot is split in included and excluded edges. Note that by default separate plots are shown and appear after each other in the plot window. To show the plots side-by-side specify par(mfrow = c(1, 2)).
 #' @param show specifies which edges should be shown, indicated by "all", "included", "inconclusive", "excluded".
-#' #' @param donotplot Runs function but does not plot (default is FALSE). Useful for saving the output (i.e. layout) without plotting.
+#' @param donotplot Runs function but does not plot (default is FALSE). Useful for saving the output (i.e. layout) without plotting.
 #' @param ... Additional arguments passed onto `qgraph`.
 #'
 #'
@@ -165,7 +165,7 @@ plot_edgeevidence <- function(output, evidence_thresh = 10, split = FALSE, show 
 #' plot_network(fit, dashed = TRUE, evidence_thresh = 10)
 #' }
 
-plot_network <- function(output, exc_prob = .5, dashed = FALSE, donotplot = FALSE,...) {
+plot_network <- function(output, exc_prob = .5, evidence_thresh = 10, dashed = FALSE, donotplot = FALSE,...) {
   if(any(any(class(output) == "easybgm"), any(class(output) == "bgms")) == FALSE){
     stop("Wrong input provided. The function requires as input the output of the easybgm or bgm function.")
   }
@@ -187,7 +187,7 @@ plot_network <- function(output, exc_prob = .5, dashed = FALSE, donotplot = FALS
 #' @name structure
 #'
 #' @param output Output object from the easybgm function. Supports also objects from the bgm function of the `bgms` package.
-#' #' @param donotplot Runs function but does not plot (default is FALSE). Useful for saving the output (i.e. layout) without plotting.
+#' @param donotplot Runs function but does not plot (default is FALSE). Useful for saving the output (i.e. layout) without plotting.
 #' @param ... Additional arguments passed onto `qgraph`
 #'
 #' @export

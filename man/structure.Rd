@@ -8,8 +8,9 @@
 plot_structure(output, donotplot = FALSE, ...)
 }
 \arguments{
-\item{output}{Output object from the easybgm function. Supports also objects from the bgm function of the \code{bgms} package.
-#' @param donotplot Runs function but does not plot (default is FALSE). Useful for saving the output (i.e. layout) without plotting.}
+\item{output}{Output object from the easybgm function. Supports also objects from the bgm function of the \code{bgms} package.}
+
+\item{donotplot}{Runs function but does not plot (default is FALSE). Useful for saving the output (i.e. layout) without plotting.}
 
 \item{...}{Additional arguments passed onto \code{qgraph}}
 }

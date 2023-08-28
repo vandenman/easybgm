@@ -27,11 +27,11 @@ evidence_bgms <- plot_network(res_bgms)
 vdiffr::expect_doppelganger("evidence plot bgms", evidence_bgms)
 
 # 3. Posterior structure plot
-poststruc_bgms <- plot_posteriorstructure(res_bgms)
+poststruc_bgms <- plot_structure_probabilities(res_bgms)
 vdiffr::expect_doppelganger("posterior structure plot bgms", poststruc_bgms)
 
 # 4. Posterior complexity plot
-postcompl_bgms <- plot_posteriorcomplexity(res_bgms)
+postcompl_bgms <- plot_complexity_probabilities(res_bgms)
 vdiffr::expect_doppelganger("posterior complexity plot bgms", postcompl_bgms)
 
 # 5. structure plot
@@ -69,11 +69,11 @@ evidence_bdgraph <- plot_network(res_bdgraph)
 vdiffr::expect_doppelganger("evidence plot Bdgraph", evidence_bdgraph)
 
 # 3. Posterior structure plot
-poststruc_bdgraph <- plot_posteriorstructure(res_bdgraph)
+poststruc_bdgraph <- plot_structure_probabilities(res_bdgraph)
 vdiffr::expect_doppelganger("posterior structure plot Bdgraph", poststruc_bdgraph)
 
 # 4. Posterior complexity plot
-postcompl_bdgraph <- plot_posteriorcomplexity(res_bdgraph)
+postcompl_bdgraph <- plot_complexity_probabilities(res_bdgraph)
 vdiffr::expect_doppelganger("posterior complexity plot Bdgraph", postcompl_bdgraph)
 
 # 5. structure plot
@@ -100,4 +100,12 @@ vdiffr::expect_doppelganger("centrality plot Bdgraph", centrality_bdgraph)
 # })
 
 
+##--------------------------------
+## Fitting with bgms
+##--------------------------------
 
+set.seed(123)
+data <- na.omit(Wenchuan)
+fit_bgms <- bgm(data[1:100, 1:5])
+network_bgmfit <- plot_network(fit_bgms)
+vdiffr::expect_doppelganger("network plot using bgm to fit", network_bgmfit)
