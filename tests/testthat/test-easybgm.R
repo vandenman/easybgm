@@ -1,13 +1,13 @@
 suppressPackageStartupMessages({
   library(bgms)
 })
+data <- na.omit(Wenchuan)
 
 ##--------------------------------
 ## Fitting with bgms
 ##--------------------------------
 if(packageVersion("bgms") > "0.1.0"){
 set.seed(123)
-data <- na.omit(Wenchuan)
 res_bgms <- easybgm(data[1:100, 1:5], type = "ordinal",
                     package = "bgms", save = T, centrality = T)
 test_that("easybgm works for bgms", {

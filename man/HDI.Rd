@@ -20,11 +20,11 @@ Plots the 95\% highest density interval of the posterior distribution of the par
 
 library(easybgm)
 library(bgms)
+
 # Only works if the package version of bgms is > 0.1.0
 data <- na.omit(Wenchuan)
 # fit <- easybgm(data, type = "ordinal",
 #               iter = 1000, save = TRUE)
-# Only works if the package version of bgms is > 0.1.0
 # plot_parameterHDI(fit)
 }
 }
