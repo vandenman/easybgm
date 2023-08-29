@@ -104,8 +104,10 @@ vdiffr::expect_doppelganger("centrality plot Bdgraph", centrality_bdgraph)
 ## Fitting with bgms
 ##--------------------------------
 
+if(packageVersion("bgms") > "0.1.0"){
 set.seed(123)
 data <- na.omit(Wenchuan)
 fit_bgms <- bgm(data[1:100, 1:5])
 network_bgmfit <- plot_network(fit_bgms)
 vdiffr::expect_doppelganger("network plot using bgm to fit", network_bgmfit)
+}

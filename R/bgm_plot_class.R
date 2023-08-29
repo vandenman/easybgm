@@ -245,8 +245,8 @@ plot_structure <- function(output, donotplot = FALSE,...) {
 #' data <- na.omit(Wenchuan)
 #' fit <- easybgm(data, type = "ordinal",
 #'                 iter = 1000, save = TRUE)
-#'
-#' plot_parameterHDI(fit)
+#' # Only works if the package version of bgms is > 0.1.0
+#' # plot_parameterHDI(fit)
 #' }
 
 plot_parameterHDI <- function(output, ...) {
