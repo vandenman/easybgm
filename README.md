@@ -61,13 +61,13 @@ backbone.
 
 The edge evidence plot aids researchers in deciding which edges provide
 robust inferential conclusions. In the edge evidence plot, edges
-represent the inclusion Bayes factor $\text{BF}_{10}$. Red edges
+represent the inclusion Bayes factor $`\text{BF}_{10}`$. Red edges
 indicate evidence for edge absence (i.e., conditional independence),
 grey edges indicate the absence of evidence, and blue edges indicate
 evidence for edge presence (i.e., conditional dependence). By default, a
-$\text{BF}_{10} > 10$ is considered strong evidence for inclusion and
-$\text{BF}_{01} > 10$ for exclusion. Users can specify the threshold for
-Bayes factors.
+$`\text{BF}_{10} > 10`$ is considered strong evidence for inclusion and
+$`\text{BF}_{01} > 10`$ for exclusion. Users can specify the threshold
+for Bayes factors.
 
 #### Network Plot
 
@@ -176,22 +176,22 @@ summary(res)
 
 Furthermore, we can visualize the results with plots. In a first step,
 we assess the edge evidence plot in which edges represent the inclusion
-Bayes factor $\text{BF}_{10}$. Especially in a large network like ours,
-it is useful to split the edge evidence plot in two parts by setting the
-`split` argument to `TRUE`. As such, the left plot shows edges with some
-evidence for inclusion (i.e., $\text{BF}_{10} > 1$), where blue edges
-represent evidence for inclusion ($\text{BF}_{10} > 10$) and grey edges
-absence of evidence ($1 < \text{BF}_{10} < 10$). The right edge evidence
-plot shows edges with some evidence for exclusion (i.e.,
-$\text{BF}_{10} < 1$) with evidence for exclusion shown as red
-($\text{BF}_{01} > 10$) and inconclusive evidence as grey
-($0.1 < \text{BF}_{10} < 1$).
+Bayes factor $`\text{BF}_{10}`$. Especially in a large network like
+ours, it is useful to split the edge evidence plot in two parts by
+setting the `split` argument to `TRUE`. As such, the left plot shows
+edges with some evidence for inclusion (i.e., $`\text{BF}_{10} > 1`$),
+where blue edges represent evidence for inclusion
+($`\text{BF}_{10} > 10`$) and grey edges absence of evidence
+($`1 < \text{BF}_{10} < 10`$). The right edge evidence plot shows edges
+with some evidence for exclusion (i.e., $`\text{BF}_{10} < 1`$) with
+evidence for exclusion shown as red ($`\text{BF}_{01} > 10`$) and
+inconclusive evidence as grey ($`0.1 < \text{BF}_{10} < 1`$).
 
 ``` r
 plot_edgeevidence(res, edge.width = 2, split = T)
 ```
 
-![](readme_plots/plot_edgeevidence.pdf)
+![](readme_plots/plot_edgeevidence.png)
 
 Furthermore, we can look at the network plot in which edges represent
 the partial associations.
@@ -202,7 +202,7 @@ plot_network(res, layout = "spring",
              theme = "TeamFortress", vsize = 6)
 ```
 
-![](readme_plots/plot_network.pdf)
+![](readme_plots/plot_network.png)
 
 We can also assess the structure specifically with three plots. Note
 that this only works, if we use either the `BDgraph` or `bgms` package.
@@ -211,20 +211,20 @@ that this only works, if we use either the `BDgraph` or `bgms` package.
 plot_structure_probabilities(res, as.BF = F)
 ```
 
-![](readme_plots/plot_structure_probabilities.pdf)
+![](readme_plots/plot_structure_probabilities.png)
 
 ``` r
 plot_complexity_probabilities(res, as.BF = F)
 ```
 
-![](readme_plots/plot_complexity_probabilities.pdf)
+![](readme_plots/plot_complexity_probabilities.png)
 
 ``` r
 plot_structure(res, layoutScale = c(.8,1), palette = "R",
                theme = "TeamFortress", vsize = 6, edge.width = .3, layout = "spring")
 ```
 
-![](readme_plots/plot_structure.pdf)
+![](readme_plots/plot_structure.png)
 
 In addition we can obtain posterior samples from the posterior
 distribution by setting `save = TRUE` in the `easybgm` function and
@@ -236,7 +236,7 @@ res <- easybgm(data, type = "binary", save = TRUE, centrality = TRUE)
 plot_parameterHDI(res)
 ```
 
-![](readme_plots/plot_parameterHDI.pdf)
+![](readme_plots/plot_parameterHDI.png)
 
 Furthermore, researcher can wish to aggregate the findings of the
 network model, commonly done with centrality measures. Due to the
@@ -251,7 +251,7 @@ centrality plot.
 plot_centrality(res, measures = "Strength")
 ```
 
-![](readme_plots/plot_centrality.pdf)
+![](readme_plots/plot_centrality.png)
 
 ## Background Information
 
