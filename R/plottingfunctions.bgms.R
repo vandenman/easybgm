@@ -362,9 +362,6 @@ plot_structure.bgms <- function(output, donotplot = FALSE,...) {
 
 plot_parameterHDI.bgms <- function(output, ...) {
 
-  if(packageVersion("bgms") < "0.1.1"){
-    stop("Update \"bgms\" to the most recent version.")
-  }
   if(!output$save){
     stop("Samples of the posterior distribution required. When estimating the model with bgm, set \"save = TRUE\".")
   }
