@@ -35,9 +35,9 @@ string2graph <- function(Gchar, p) {
 }
 
 # 4. BDgraph extract posterior distribution for estimates
-extract_posterior <- function(fit, data, method = c("ggm", "gcgm"), not.cont){
+extract_posterior <- function(fit, data, method = c("ggm", "gcgm"), not_cont, no_samples = 10000){
   m <- length(fit$all_graphs)
-  k <- 10000
+  k <- no_samples
   n <- nrow(data)
   p <- ncol(data)
   j <- 1
@@ -45,7 +45,7 @@ extract_posterior <- function(fit, data, method = c("ggm", "gcgm"), not.cont){
   #Rs = array(0, dim=c(k, p, p))
   Rs = matrix(0, nrow = k, ncol = (p*(p-1))/2)
   if(method == "gcgm") {
-    S <- BDgraph::get_S_n_p(data, method = method, n = n, not.cont = not.cont)$S
+    S <- BDgraph::get_S_n_p(data, method = method, n = n, not.cont = not_cont)$S
   } else {
     S <- t(data) %*% data
   }

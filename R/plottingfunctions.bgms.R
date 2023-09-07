@@ -1,10 +1,10 @@
 #' @export
 
-plot_structure_probabilities.bgms <- function(output, as.BF = FALSE, ...) {
+plot_structure_probabilities.bgms <- function(output, as_BF = FALSE, ...) {
 
   # Extract the results from bgms
   res <- bgm_extract.package_bgms(fit = output, save = output$save, centrality = FALSE,
-                                  type = NULL, not.cont = NULL, data = NULL,
+                                  type = NULL, not_cont = NULL, data = NULL,
                                   edge_prior = output$edge_prior,
                                   inclusion_probability  = output$inclusion_probability,
                                   beta_bernoulli_alpha = output$beta_bernoulli_alpha,
@@ -14,7 +14,7 @@ plot_structure_probabilities.bgms <- function(output, as.BF = FALSE, ...) {
   # Specify default arguments for function
   default_args <- list(
     xlab = "Structures",
-    ylab = ifelse(as.BF == TRUE, expression(log(BF[1][s])), "Posterior Structure Probability"),
+    ylab = ifelse(as_BF == TRUE, expression(log(BF[1][s])), "Posterior Structure Probability"),
     theme = theme_minimal(),
     axis.text.size = 16,
     panel.border = element_blank(),
@@ -29,7 +29,7 @@ plot_structure_probabilities.bgms <- function(output, as.BF = FALSE, ...) {
   args <- set_defaults(default_args, ...)
   sorted_structure_prob <- as.data.frame(sort(output$structure_probabilities, decreasing = TRUE))
   colnames(sorted_structure_prob) <- "posterior_prob"
-  if(as.BF){
+  if(as_BF){
 
     BF1s <- sorted_structure_prob$posterior_prob[1] / sorted_structure_prob$posterior_prob # BF best structure vs. others
     data <- data.frame(structures = 1:length(BF1s), BayesFactor = BF1s)
@@ -72,7 +72,7 @@ plot_complexity_probabilities.bgms <- function(output, ...) {
 
   # Extract the results from bgms
   res <- bgm_extract.package_bgms(fit = output, save = output$save, centrality = FALSE,
-                                  type = NULL, not.cont = NULL, data = NULL,
+                                  type = NULL, not_cont = NULL, data = NULL,
                                   edge_prior = output$edge_prior,
                                   inclusion_probability  = output$inclusion_probability,
                                   beta_bernoulli_alpha = output$beta_bernoulli_alpha,
@@ -128,7 +128,7 @@ plot_complexity_probabilities.bgms <- function(output, ...) {
 plot_edgeevidence.bgms <- function(output, evidence_thresh = 10, split = FALSE, show = "all", donotplot = FALSE,...) {
   # Extract the results from bgms
   res <- bgm_extract.package_bgms(fit = output, save = output$save, centrality = FALSE,
-                                  type = NULL, not.cont = NULL, data = NULL,
+                                  type = NULL, not_cont = NULL, data = NULL,
                                   edge_prior = output$edge_prior,
                                   inclusion_probability  = output$inclusion_probability,
                                   beta_bernoulli_alpha = output$beta_bernoulli_alpha,
@@ -261,7 +261,7 @@ plot_edgeevidence.bgms <- function(output, evidence_thresh = 10, split = FALSE, 
 plot_network.bgms <- function(output, exc_prob = .5, evidence_thresh = 10, dashed = FALSE, donotplot = FALSE,...) {
   # Extract the results from bgms
   res <- bgm_extract.package_bgms(fit = output, save = output$save, centrality = FALSE,
-                                  type = NULL, not.cont = NULL, data = NULL,
+                                  type = NULL, not_cont = NULL, data = NULL,
                                   edge_prior = output$edge_prior,
                                   inclusion_probability  = output$inclusion_probability,
                                   beta_bernoulli_alpha = output$beta_bernoulli_alpha,
@@ -319,7 +319,7 @@ plot_network.bgms <- function(output, exc_prob = .5, evidence_thresh = 10, dashe
 plot_structure.bgms <- function(output, donotplot = FALSE,...) {
   # Extract the results from bgms
   res <- bgm_extract.package_bgms(fit = output, save = output$save, centrality = FALSE,
-                                  type = NULL, not.cont = NULL, data = NULL,
+                                  type = NULL, not_cont = NULL, data = NULL,
                                   edge_prior = output$edge_prior,
                                   inclusion_probability  = output$inclusion_probability,
                                   beta_bernoulli_alpha = output$beta_bernoulli_alpha,
@@ -368,7 +368,7 @@ plot_parameterHDI.bgms <- function(output, ...) {
 
   # Extract the results from bgms
   res <- bgm_extract.package_bgms(fit = output, save = output$save, centrality = FALSE,
-                                  type = NULL, not.cont = NULL, data = NULL,
+                                  type = NULL, not_cont = NULL, data = NULL,
                                   edge_prior = output$edge_prior,
                                   inclusion_probability  = output$inclusion_probability,
                                   beta_bernoulli_alpha = output$beta_bernoulli_alpha,
@@ -436,7 +436,7 @@ plot_centrality.bgms <- function(output, ...){
 
   # Extract the results from bgms
   res <- bgm_extract.package_bgms(fit = output, save = output$save, centrality = TRUE,
-                                  type = NULL, not.cont = NULL, data = NULL,
+                                  type = NULL, not_cont = NULL, data = NULL,
                                   edge_prior = output$edge_prior,
                                   inclusion_probability  = output$inclusion_probability,
                                   beta_bernoulli_alpha = output$beta_bernoulli_alpha,

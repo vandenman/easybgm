@@ -3,7 +3,7 @@
 # --------------------------------------------------------------------------------------------------
 
 bgm_fit.package_bgms <- function(fit, type, data, iter, save,
-                                 not.cont, centrality, progress, ...){
+                                 not_cont, centrality, progress, ...){
 
   if(!save && centrality){
     save <- TRUE
@@ -64,7 +64,7 @@ bgm_fit.package_bgms <- function(fit, type, data, iter, save,
 # 2. Extracting results function
 # --------------------------------------------------------------------------------------------------
 bgm_extract.package_bgms <- function(fit, type, save,
-                                     not.cont, data, centrality, ...){
+                                     not_cont, data, centrality, ...){
   if(centrality) save <- TRUE
 
   if(any(class(fit) != "bgms")){

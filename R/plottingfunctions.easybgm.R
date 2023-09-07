@@ -1,5 +1,5 @@
 #' @export
-plot_structure_probabilities.easybgm <- function(output, as.BF = FALSE, ...) {
+plot_structure_probabilities.easybgm <- function(output, as_BF = FALSE, ...) {
   if(!any(class(output) == "easybgm")){
     stop("Wrong input provided. The function requires as input the output of the easybgm function.")
   }
@@ -10,7 +10,7 @@ plot_structure_probabilities.easybgm <- function(output, as.BF = FALSE, ...) {
 
   default_args <- list(
     xlab = "Structures",
-    ylab = ifelse(as.BF == TRUE, expression(log(BF[1][s])), "Posterior Structure Probability"),
+    ylab = ifelse(as_BF == TRUE, expression(log(BF[1][s])), "Posterior Structure Probability"),
     theme = theme_minimal(),
     axis.text.size = 16,
     panel.border = element_blank(),
@@ -25,7 +25,7 @@ plot_structure_probabilities.easybgm <- function(output, as.BF = FALSE, ...) {
   args <- set_defaults(default_args, ...)
   sorted_structure_prob <- as.data.frame(sort(output$structure_probabilities, decreasing=T))
   colnames(sorted_structure_prob) <- "posterior_prob"
-  if(as.BF){
+  if(as_BF){
 
     BF1s <- sorted_structure_prob$posterior_prob[1] / sorted_structure_prob$posterior_prob # BF best structure vs. others
     data <- data.frame(structures = 1:length(BF1s), BayesFactor = BF1s)

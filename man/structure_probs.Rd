@@ -5,12 +5,12 @@
 \alias{plot_structure_probabilities}
 \title{Plot Posterior Structure Probabilities}
 \usage{
-plot_structure_probabilities(output, as.BF = FALSE, ...)
+plot_structure_probabilities(output, as_BF = FALSE, ...)
 }
 \arguments{
 \item{output}{Output object from the easybgm function. Supports also objects from the bgm function of the \code{bgms} package.}
 
-\item{as.BF}{If TRUE plots the y-axis as Bayes factors instead of posterior structure probability. Default is FALSE.}
+\item{as_BF}{If TRUE plots the y-axis as Bayes factors instead of posterior structure probability. Default is FALSE.}
 
 \item{...}{Additional arguments passed onto \code{ggplot2}}
 }

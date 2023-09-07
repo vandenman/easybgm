@@ -208,13 +208,13 @@ We can also assess the structure specifically with three plots. Note
 that this only works, if we use either the `BDgraph` or `bgms` package.
 
 ``` r
-plot_structure_probabilities(res, as.BF = F)
+plot_structure_probabilities(res, as_BF = FALSE)
 ```
 
 ![](readme_plots/plot_structure_probabilities.png)
 
 ``` r
-plot_complexity_probabilities(res, as.BF = F)
+plot_complexity_probabilities(res, as_BF = FALSE)
 ```
 
 ![](readme_plots/plot_complexity_probabilities.png)

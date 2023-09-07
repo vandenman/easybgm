@@ -3,7 +3,7 @@
 # --------------------------------------------------------------------------------------------------
 
 bgm_fit.package_bdgraph <- function(fit, type, data, iter, save,
-                            not.cont, centrality, progress, ...){
+                                    not_cont, centrality, progress, ...){
 
   prior_defaults <- list(
     g.prior = .5,
@@ -22,12 +22,12 @@ bgm_fit.package_bdgraph <- function(fit, type, data, iter, save,
     fit$model <- "ggm"
   }
   if(type %in% c("mixed", "ordinal")){
-    if(type == "ordinal") not.cont <- rep(1, ncol(data))
+    if(type == "ordinal") not_cont <- rep(1, ncol(data))
     # fitting the model
 
     bdgraph_fit <- do.call(BDgraph::bdgraph,
                           c(list(data = data, method = "gcgm",
-                               iter = iter, save = TRUE
+                               iter = iter, save = TRUE, not.cont = not_cont
                                ), args))
 
     fit$model <- "gcgm"
@@ -53,7 +53,7 @@ bgm_fit.package_bdgraph <- function(fit, type, data, iter, save,
 # --------------------------------------------------------------------------------------------------
 
 bgm_extract.package_bdgraph <- function(fit, type, save,
-                                not.cont, data, centrality, ...){
+                                        not_cont, data, centrality, ...){
   model <- fit$model
   if(is.null(model)){
     stop("Please specify the type of model estimated with BDgraph (e.g., ggm, gcgm, dgm-binary).",
@@ -89,7 +89,7 @@ bgm_extract.package_bdgraph <- function(fit, type, save,
     if(save == TRUE){
       # Extract posterior samples
       data<-as.matrix(data)
-      bdgraph_res$samples_posterior <- extract_posterior(fit, data=data, method = model, not.cont)[[1]]
+      bdgraph_res$samples_posterior <- extract_posterior(fit, data=data, method = model, not_cont)[[1]]
 
       if(centrality == TRUE){
         # Centrality indices
@@ -122,15 +122,15 @@ bgm_extract.package_bdgraph <- function(fit, type, save,
     if(save){
       #warning("Posterior samples cannot be extracted for mixed models with BDgraph at the moment. Results are provided without the posterior samples.")
 
-      if(is.null(not.cont)){
-        stop("Specify a vector indicating variables are continuos with the not.cont argument (1 indicates not continuous)",
+      if(is.null(not_cont)){
+        stop("Specify a vector indicating variables are continuos with the not_cont argument (1 indicates not continuous)",
              call. = FALSE)
       }
 
       data <- as.matrix(data)
 
       # Extract posterior samples
-      bdgraph_res$samples_posterior <- extract_posterior(fit, data, method = model, not.cont = not.cont)[[1]]
+      bdgraph_res$samples_posterior <- extract_posterior(fit, data, method = model, not_cont = not_cont)[[1]]
 
       if(centrality){
       # Centrality indices

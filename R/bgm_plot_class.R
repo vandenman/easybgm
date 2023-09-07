@@ -5,7 +5,7 @@
 #' @name structure_probs
 #'
 #' @param output Output object from the easybgm function. Supports also objects from the bgm function of the `bgms` package.
-#' @param as.BF If TRUE plots the y-axis as Bayes factors instead of posterior structure probability. Default is FALSE.
+#' @param as_BF If TRUE plots the y-axis as Bayes factors instead of posterior structure probability. Default is FALSE.
 #' @param ... Additional arguments passed onto `ggplot2`
 #'
 #' @export
@@ -24,7 +24,7 @@
 #' plot_structure_probabilities(fit)
 #' }
 
-plot_structure_probabilities <- function(output, as.BF = FALSE, ...) {
+plot_structure_probabilities <- function(output, as_BF = FALSE, ...) {
   if(any(any(class(output) == "easybgm"), any(class(output) == "bgms")) == FALSE){
     stop("Wrong input provided. The function requires as input the output of the easybgm or bgm function.")
   }

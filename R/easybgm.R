@@ -8,7 +8,7 @@
 #' @param type What is the data type? Options: continuous, mixed, ordinal, binary
 #' @param package The R-package that should be used for fitting the network model; supports BGGM, BDgraph, and bgms. Optional argument;
 #'     default values are specified depending on the datatype.
-#' @param not.cont If data-type is mixed, a vector of length p, specifying the not-continuous
+#' @param not_cont If data-type is mixed, a vector of length p, specifying the not-continuous
 #'     variables (1 = not continuous, 0 = continuous).
 #' @param iter number of iterations for the sampler.
 #' @param save Logical. Should the posterior samples be obtained (default = FALSE)?
@@ -124,12 +124,12 @@
 
 
 
-easybgm <- function(data, type, package = NULL, not.cont = NULL, iter = 1e4,
+easybgm <- function(data, type, package = NULL, not_cont = NULL, iter = 1e4,
                     save = FALSE, centrality = FALSE, progress = TRUE,
                     ...){
 
 
-  if(type == "mixed" & is.null(not.cont)){
+  if(type == "mixed" & is.null(not_cont)){
     stop("Please provide a binary vector of length p specifying the not continuous variables
          (1 = not continuous, 0 = continuous).",
          call. = FALSE)
@@ -151,7 +151,7 @@ easybgm <- function(data, type, package = NULL, not.cont = NULL, iter = 1e4,
     warning("The data contains missing values which cannot be handled as continuous data by BDgraph.
             Note that we switched the type to \"mixed\", which estimates a GCGM and can impute missing data.")
     type <- "mixed"
-    not.cont <- rep(0, ncol(data))
+    not_cont <- rep(0, ncol(data))
   }
 
   if((package == "package_bgms") & (type %in% c("continuous", "mixed"))){
@@ -168,7 +168,7 @@ easybgm <- function(data, type, package = NULL, not.cont = NULL, iter = 1e4,
 
   # Fit the model
   tryCatch(
-    {fit <- bgm_fit(fit, data = data, type = type, not.cont = not.cont, iter = iter,
+    {fit <- bgm_fit(fit, data = data, type = type, not_cont = not_cont, iter = iter,
                     save = save, centrality = centrality, progress = progress, ...)
     },
     error = function(e){
@@ -178,7 +178,7 @@ easybgm <- function(data, type, package = NULL, not.cont = NULL, iter = 1e4,
 
   # Extract the results
   res <- bgm_extract(fit, type = type,
-                     save = save, not.cont = not.cont,
+                     save = save, not_cont = not_cont,
                      data = data, centrality = centrality, ...)
 
   # Output results

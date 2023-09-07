@@ -3,7 +3,7 @@
 # --------------------------------------------------------------------------------------------------
 
 bgm_fit.package_bggm <- function(fit, type, data, iter, save,
-                                 not.cont, centrality, progress, ...){
+                                 not_cont, centrality, progress, ...){
 
   prior_defaults <- list(
     prior_sd = .25
@@ -12,7 +12,7 @@ bgm_fit.package_bggm <- function(fit, type, data, iter, save,
   args <- set_defaults(prior_defaults, ...)
   # Fit the model
   bggm_fit <- do.call(
-    BGGM::explore, c(list(Y = data, type = type, mixed_type = not.cont,
+    BGGM::explore, c(list(Y = data, type = type, mixed_type = not_cont,
                           iter = iter, progress = progress, seed = NULL), args)
   )
   fit$model <- type
@@ -28,7 +28,7 @@ bgm_fit.package_bggm <- function(fit, type, data, iter, save,
 # --------------------------------------------------------------------------------------------------
 
 bgm_extract.package_bggm <- function(fit, type, save,
-                                     not.cont, data, centrality, ...){
+                                     not_cont, data, centrality, ...){
   fit <- fit$packagefit
 
   out_select <- BGGM::select(fit)

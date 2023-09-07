@@ -22,10 +22,9 @@ library(easybgm)
 library(bgms)
 
 data <- na.omit(Wenchuan)
-# Only works if the package version of bgms is > 0.1.0
-# fit <- easybgm(data, type = "ordinal",
-#                 iter = 1000, save = TRUE, centrality = TRUE)
+fit <- easybgm(data, type = "ordinal",
+                iter = 1000, save = TRUE, centrality = TRUE)
 
-# plot_centrality(fit)
+plot_centrality(fit)
 }
 }

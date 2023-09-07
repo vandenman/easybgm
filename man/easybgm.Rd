@@ -8,7 +8,7 @@ easybgm(
   data,
   type,
   package = NULL,
-  not.cont = NULL,
+  not_cont = NULL,
   iter = 10000,
   save = FALSE,
   centrality = FALSE,
@@ -24,7 +24,7 @@ easybgm(
 \item{package}{The R-package that should be used for fitting the network model; supports BGGM, BDgraph, and bgms. Optional argument;
 default values are specified depending on the datatype.}
 
-\item{not.cont}{If data-type is mixed, a vector of length p, specifying the not-continuous
+\item{not_cont}{If data-type is mixed, a vector of length p, specifying the not-continuous
 variables (1 = not continuous, 0 = continuous).}
 
 \item{iter}{number of iterations for the sampler.}
