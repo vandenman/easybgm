@@ -11,30 +11,30 @@
       --- 
        EDGE SPECIFIC OVERVIEW 
                 Relation Estimate Posterior Incl. Prob. Inclusion BF     Category
-        intrusion-dreams    0.503                 1.000          Inf     included
-         intrusion-flash    0.575                 1.000          Inf     included
-            dreams-flash    0.237                 0.797        3.916 inconclusive
-         intrusion-upset    0.037                 0.208        0.263 inconclusive
-            dreams-upset    0.141                 0.572        1.335 inconclusive
-             flash-upset    0.133                 0.504        1.015 inconclusive
-       intrusion-physior    0.092                 0.394        0.649 inconclusive
-          dreams-physior    0.010                 0.116        0.132 inconclusive
-           flash-physior    0.138                 0.559        1.270 inconclusive
-           upset-physior    0.775                 1.000          Inf     included
+        intrusion-dreams    0.514                 1.000          Inf     included
+         intrusion-flash    0.566                 1.000          Inf     included
+            dreams-flash    0.291                 0.913       10.521     included
+         intrusion-upset    0.034                 0.197        0.245 inconclusive
+            dreams-upset    0.094                 0.438        0.780 inconclusive
+             flash-upset    0.124                 0.525        1.104 inconclusive
+       intrusion-physior    0.099                 0.450        0.819 inconclusive
+          dreams-physior    0.002                 0.062        0.066     excluded
+           flash-physior    0.107                 0.455        0.834 inconclusive
+           upset-physior    0.797                 1.000          Inf     included
       
        Bayes Factors larger than 10 were considered sufficient evidence for the categorization. 
        --- 
        AGGREGATED EDGE OVERVIEW 
-       Number of included edges: 3 
-       Number of inconclusive edges: 7 
-       Number of excluded edges: 0 
+       Number of included edges: 4 
+       Number of inconclusive edges: 5 
+       Number of excluded edges: 1 
        Number of possible edges: 10 
        
        --- 
        STRUCTURE OVERVIEW 
-       Number of visited structures: 115 
+       Number of visited structures: 101 
        Number of possible structures: 1024 
-       Posterior probability of most likely structure: 0.099 
+       Posterior probability of most likely structure: 0.1091 
       ---
 
 # easybgm works for bdgraph
