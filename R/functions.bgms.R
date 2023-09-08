@@ -113,7 +113,7 @@ bgm_extract.package_bgms <- function(fit, type, save,
       colnames(bgms_res$parameters) <- rownames(bgms_res$parameters) <- fit$colnames
     }
     bgms_res$inc_probs <- vector2matrix(colMeans(fit$gamma), p = p)
-    bgms_res$BF <- (bgms_res$inc_probs/(1-bgms_res$inc_probs))/(edge.prior /(1-edge.prior))
+    bgms_res$inc_BF <- (bgms_res$inc_probs/(1-bgms_res$inc_probs))/(edge.prior /(1-edge.prior))
     bgms_res$structure <- 1*(bgms_res$inc_probs > 0.5)
 
     #Obtain structure information
@@ -125,7 +125,7 @@ bgm_extract.package_bgms <- function(fit, type, save,
   } else {
     bgms_res$parameters <- fit$interactions
     bgms_res$inc_probs <- fit$gamma
-    bgms_res$BF <- (bgms_res$inc_probs/(1-bgms_res$inc_probs))/(edge.prior /(1-edge.prior))
+    bgms_res$inc_BF <- (bgms_res$inc_probs/(1-bgms_res$inc_probs))/(edge.prior /(1-edge.prior))
     bgms_res$structure <- 1*(bgms_res$inc_probs > 0.5)
   }
   if(save){
@@ -135,6 +135,10 @@ bgm_extract.package_bgms <- function(fit, type, save,
       bgms_res$centrality <- centrality(bgms_res)
     }
   }
+  # Adapt column names of output
+  colnames(bgms_res$inc_probs) <- colnames(bgms_res$parameters)
+  colnames(bgms_res$inc_BF) <- colnames(bgms_res$parameters)
+
   bgms_res$model <- type
   output <- bgms_res
   class(output) <- c("package_bgms", "easybgm")

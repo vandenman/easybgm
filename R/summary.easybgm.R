@@ -26,7 +26,7 @@ summary.easybgm <- function(object, evidence_thresh = 10, ...) {
   # create data frame with parameter results
   if(object$model %in% c("dgm-binary")){
     inc_probs  <- round(object$inc_probs, 3)[upper.tri(object$inc_probs)]
-    BF <- round(object$BF, 3)[upper.tri(object$BF)]
+    BF <- round(object$inc_BF, 3)[upper.tri(object$inc_BF)]
     #create the category of the edge (i.e., included, excluded, inconclusive)
     category <- character(length(BF))
     category[(BF < evidence_thresh) & (BF > 1/evidence_thresh)] <- "inconclusive"
@@ -50,7 +50,7 @@ summary.easybgm <- function(object, evidence_thresh = 10, ...) {
   } else {
     parameter_values <- round(object$parameters, 3)[upper.tri(object$parameters)]
     inc_probs  <- round(object$inc_probs, 3)[upper.tri(object$inc_probs)]
-    BF <- round(object$BF, 3)[upper.tri(object$BF)]
+    BF <- round(object$inc_BF, 3)[upper.tri(object$inc_BF)]
     #create the category of the edge (i.e., included, excluded, inconclusive)
     category <- character(length(BF))
     category[(BF < evidence_thresh) & (BF > 1/evidence_thresh)] <- "inconclusive"
@@ -129,12 +129,12 @@ print.easybgm <- function(x, ...){
         "\n EDGE SPECIFIC OVERVIEW",
         "\n")
     print(x$parameters, quote = FALSE, right = TRUE, row.names=F)
-    cat("\n Bayes Factors larger than", x$evidence_thresh, "were considered sufficient evidence for the categorization.",
+    cat("\n Bayes factors larger than", x$evidence_thresh, "were considered sufficient evidence for the classification",
         "\n ---",
         "\n AGGREGATED EDGE OVERVIEW",
-        "\n Number of included edges:", x$n_inclu_edges,
-        "\n Number of inconclusive edges:", x$n_incon_edges,
-        "\n Number of excluded edges:", x$n_exclu_edges,
+        "\n Number of edges with sufficient evidence for inclusion:", x$n_inclu_edges,
+        "\n Number of edges with insufficient evidence:", x$n_incon_edges,
+        "\n Number of edges with sufficient evidence for exclusion:", x$n_exclu_edges,
         "\n Number of possible edges:", x$n_possible_edges,
         "\n")
   } else {
@@ -146,12 +146,12 @@ print.easybgm <- function(x, ...){
         "\n EDGE SPECIFIC OVERVIEW",
         "\n")
     print(x$parameters, quote = FALSE, right = TRUE, row.names=F)
-    cat("\n Bayes Factors larger than", x$evidence_thresh, "were considered sufficient evidence for the categorization.",
+    cat("\n Bayes Factors larger than", x$evidence_thresh, "were considered sufficient evidence for the classification",
         "\n ---",
         "\n AGGREGATED EDGE OVERVIEW",
-        "\n Number of included edges:", x$n_inclu_edges,
-        "\n Number of inconclusive edges:", x$n_incon_edges,
-        "\n Number of excluded edges:", x$n_exclu_edges,
+        "\n Number of edges with sufficient evidence for inclusion:", x$n_inclu_edges,
+        "\n Number of edges with insufficient evidence:", x$n_incon_edges,
+        "\n Number of edges with sufficient evidence for exclusion:", x$n_exclu_edges,
         "\n Number of possible edges:", x$n_possible_edges,
         "\n",
         "\n ---",

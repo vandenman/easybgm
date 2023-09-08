@@ -150,7 +150,7 @@ plot_edgeevidence.bgms <- function(output, evidence_thresh = 10, split = FALSE, 
 
   )
   args <- set_defaults(default_args, ...)
-  graph <- output$BF
+  graph <- output$inc_BF
   diag(graph) <- 1
 
   # assign a color to each edge (inclusion - blue, exclusion - red, no conclusion - grey)
@@ -221,13 +221,13 @@ plot_edgeevidence.bgms <- function(output, evidence_thresh = 10, split = FALSE, 
   if(show != "all"){
     graph_show <- matrix(0, ncol = ncol(graph), nrow = nrow(graph))
     if("included" %in% show){
-      graph_show[output$BF > evidence_thresh] <- 1
+      graph_show[output$inc_BF > evidence_thresh] <- 1
     }
     if("excluded" %in% show){
-      graph_show[output$BF < (1/evidence_thresh)] <- 1
+      graph_show[output$inc_BF < (1/evidence_thresh)] <- 1
     }
     if("inconclusive" %in% show){
-      graph_show[(output$BF > (1/evidence_thresh)) & (output$BF < evidence_thresh)] <- 1
+      graph_show[(output$inc_BF > (1/evidence_thresh)) & (output$inc_BF < evidence_thresh)] <- 1
     }
     diag(graph_show) <- 1
     colnames(graph_show) <- colnames(output$parameters)
@@ -289,7 +289,7 @@ plot_network.bgms <- function(output, exc_prob = .5, evidence_thresh = 10, dashe
 
   # Plot
   if(dashed){
-    graph_dashed <- ifelse(output$BF < args$evidence_thres, "dashed", "solid")
+    graph_dashed <- ifelse(output$inc_BF < args$evidence_thres, "dashed", "solid")
     qgraph_plot <- qgraph::qgraph(graph, layout = args$layout_avg, lty = graph_dashed,
                                   theme = args$theme, vsize = args$vsize,
                                   nodeNames = args$nodeNames,

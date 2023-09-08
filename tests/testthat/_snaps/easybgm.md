@@ -22,12 +22,12 @@
            flash-physior    0.107                 0.455        0.834 inconclusive
            upset-physior    0.797                 1.000          Inf     included
       
-       Bayes Factors larger than 10 were considered sufficient evidence for the categorization. 
+       Bayes Factors larger than 10 were considered sufficient evidence for the classification 
        --- 
        AGGREGATED EDGE OVERVIEW 
-       Number of included edges: 4 
-       Number of inconclusive edges: 5 
-       Number of excluded edges: 1 
+       Number of edges with sufficient evidence for inclusion: 4 
+       Number of edges with insufficient evidence: 5 
+       Number of edges with sufficient evidence for exclusion: 1 
        Number of possible edges: 10 
        
        --- 
@@ -49,30 +49,30 @@
        Fitting Package: bdgraph 
       --- 
        EDGE SPECIFIC OVERVIEW 
-                Relation Estimate Posterior Incl. Prob. Inclusion BF Category
-        intrusion-dreams    0.447                     1          Inf included
-         intrusion-flash    0.283                     1          Inf included
-            dreams-flash    0.317                     1          Inf included
-         intrusion-upset    0.158                     1          Inf included
-            dreams-upset    0.199                     1          Inf included
-             flash-upset    0.239                     1          Inf included
-       intrusion-physior    0.205                     1          Inf included
-          dreams-physior   -0.176                     1          Inf included
-           flash-physior    0.164                     1          Inf included
-           upset-physior    0.598                     1          Inf included
+                Relation Estimate Posterior Incl. Prob. Inclusion BF     Category
+        intrusion-dreams    0.436                  1.00          Inf     included
+         intrusion-flash    0.444                  1.00          Inf     included
+            dreams-flash    0.197                  0.71        2.448 inconclusive
+         intrusion-upset    0.123                  0.45        0.818 inconclusive
+            dreams-upset    0.165                  0.73        2.704 inconclusive
+             flash-upset    0.185                  0.68        2.125 inconclusive
+       intrusion-physior    0.172                  0.68        2.125 inconclusive
+          dreams-physior    0.003                  0.04        0.042     excluded
+           flash-physior    0.125                  0.48        0.923 inconclusive
+           upset-physior    0.592                  1.00          Inf     included
       
-       Bayes Factors larger than 10 were considered sufficient evidence for the categorization. 
+       Bayes Factors larger than 10 were considered sufficient evidence for the classification 
        --- 
        AGGREGATED EDGE OVERVIEW 
-       Number of included edges: 10 
-       Number of inconclusive edges: 0 
-       Number of excluded edges: 0 
+       Number of edges with sufficient evidence for inclusion: 3 
+       Number of edges with insufficient evidence: 6 
+       Number of edges with sufficient evidence for exclusion: 1 
        Number of possible edges: 10 
        
        --- 
        STRUCTURE OVERVIEW 
-       Number of visited structures: 62 
+       Number of visited structures: 29 
        Number of possible structures: 1024 
-       Posterior probability of most likely structure: 1 
+       Posterior probability of most likely structure: 0.2386 
       ---
 

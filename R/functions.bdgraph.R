@@ -7,7 +7,8 @@ bgm_fit.package_bdgraph <- function(fit, type, data, iter, save,
 
   prior_defaults <- list(
     g.prior = .5,
-    df.prior = 3
+    df.prior = 3,
+    algorithm = "rjmcmc"
   )
 
   args <- set_defaults(prior_defaults, ...)
@@ -74,7 +75,7 @@ bgm_extract.package_bdgraph <- function(fit, type, save,
     diag(bdgraph_res$parameters) <- 0
     bdgraph_res$inc_probs <- as.matrix(BDgraph::plinks(fit))
     bdgraph_res$inc_probs  <- bdgraph_res$inc_probs + t(bdgraph_res$inc_probs)
-    bdgraph_res$BF <- (bdgraph_res$inc_probs / (1 - bdgraph_res$inc_probs))/(edge.prior /(1-edge.prior))
+    bdgraph_res$inc_BF <- (bdgraph_res$inc_probs / (1 - bdgraph_res$inc_probs))/(edge.prior /(1-edge.prior))
     bdgraph_res$structure <- 1*(bdgraph_res$inc_probs > 0.5)
     bdgraph_res$structure_probabilities <- fit$graph_weights/sum(fit$graph_weights)
     bdgraph_res$graph_weights <- fit$graph_weights
@@ -108,7 +109,7 @@ bgm_extract.package_bdgraph <- function(fit, type, save,
     diag(bdgraph_res$parameters) <- 0
     bdgraph_res$inc_probs <- as.matrix(BDgraph::plinks(fit))
     bdgraph_res$inc_probs  <- bdgraph_res$inc_probs + t(bdgraph_res$inc_probs)
-    bdgraph_res$BF <- (bdgraph_res$inc_probs / (1 - bdgraph_res$inc_probs))/(edge.prior/(1-edge.prior))
+    bdgraph_res$inc_BF <- (bdgraph_res$inc_probs / (1 - bdgraph_res$inc_probs))/(edge.prior/(1-edge.prior))
     bdgraph_res$structure <- 1*(bdgraph_res$inc_probs > 0.5)
     bdgraph_res$structure_probabilities <- fit$graph_weights/sum(fit$graph_weights)
     bdgraph_res$graph_weights <- fit$graph_weights
@@ -138,12 +139,15 @@ bgm_extract.package_bdgraph <- function(fit, type, save,
       bdgraph_res$centrality <- centrality(bdgraph_res)
       }
     }
+    colnames(bdgraph_res$inc_probs) <- colnames(bdgraph_res$parameters)
+    colnames(bdgraph_res$inc_BF) <- colnames(bdgraph_res$parameters)
+
     output <- bdgraph_res
   }
   if(model %in% c("dgm-binary")){
     #Bayesian model-averaged estimates
     bdgraph_res$inc_probs <- as.matrix(BDgraph::plinks(fit))
-    bdgraph_res$BF <- (bdgraph_res$inc_probs / (1 - bdgraph_res$inc_probs))/(edge.prior/(1-edge.prior))
+    bdgraph_res$inc_BF <- (bdgraph_res$inc_probs / (1 - bdgraph_res$inc_probs))/(edge.prior/(1-edge.prior))
     # bdgraph_res$package <- "bdgraph"
     bdgraph_res$model <- "dgm-binary"
 

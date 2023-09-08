@@ -5,7 +5,7 @@ Version: 0.1.0
 Authors@R: c(
   person("Karoline", "Huth", , "k.huth@uva.nl", role = c("aut", "cre"), 
         comment = c(ORCID = "0000-0002-0662-1591")), 
-  person("Sara", "Keetelaar", "s.keetelaar@uva.nl", role = c("ctb"))
+  person("Sara", "Keetelaar", role = c("ctb"))
   )
 Maintainer: Karoline Huth <k.huth@uva.nl>
 Description: The package helps extracting and visualizing the results of a Bayesian analysis of networks commonly found in psychology. Until now it supports the extraction of cross-sectional network models fitted using `BDgraph` and `BGGM`. The package allows to extract the parameter estimates, posterior inclusion probability, inclusion Bayes factor and the posterior density of the parameters. In addition, for `BDgraph` it allows to assess and visualize the posterior probability of the structure space. 

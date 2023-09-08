@@ -35,9 +35,12 @@ bgm_extract.package_bggm <- function(fit, type, save,
   bggm_res <- list()
   bggm_res$parameters <- out_select$pcor_mat
   colnames(bggm_res$parameters) <- colnames(fit$Y)
-  bggm_res$BF <- out_select$BF_10
+  bggm_res$inc_BF <- out_select$BF_10
   bggm_res$inc_probs <- out_select$BF_10/(out_select$BF_10 + 1)
   bggm_res$structure <- out_select$Adj_10
+
+  colnames(bggm_res$inc_probs) <- colnames(bggm_res$parameters)
+  colnames(bggm_res$inc_BF) <- colnames(bggm_res$parameters)
 
   if(centrality){
     save <- TRUE
