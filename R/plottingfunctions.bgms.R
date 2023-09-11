@@ -362,9 +362,11 @@ plot_structure.bgms <- function(output, donotplot = FALSE,...) {
 
 plot_parameterHDI.bgms <- function(output, ...) {
 
+
   if(!output$save){
     stop("Samples of the posterior distribution required. When estimating the model with bgm, set \"save = TRUE\".")
   }
+
 
   # Extract the results from bgms
   res <- bgm_extract.package_bgms(fit = output, save = output$save, centrality = FALSE,

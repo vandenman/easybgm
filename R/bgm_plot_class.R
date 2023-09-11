@@ -12,7 +12,7 @@
 #' @importFrom dplyr group_by summarise mutate group_modify filter
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #'
 #' library(easybgm)
 #' library(bgms)
@@ -52,7 +52,7 @@ plot_structure_probabilities <- function(output, as_BF = FALSE, ...) {
 #' @import ggplot2
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #'
 #' library(easybgm)
 #' library(bgms)
@@ -96,7 +96,7 @@ plot_complexity_probabilities <- function(output, ...) {
 #' @export
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #'
 #' library(easybgm)
 #' library(bgms)
@@ -147,7 +147,7 @@ plot_edgeevidence <- function(output, evidence_thresh = 10, split = FALSE, show 
 #'
 #' @export
 #' @examples
-#' \donttest{
+#' \dontrun{
 #'
 #' library(easybgm)
 #' library(bgms)
@@ -195,7 +195,7 @@ plot_network <- function(output, exc_prob = .5, evidence_thresh = 10, dashed = F
 #' @import qgraph
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #'
 #' library(easybgm)
 #' library(bgms)
@@ -237,7 +237,7 @@ plot_structure <- function(output, donotplot = FALSE,...) {
 #' @importFrom stats median
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #'
 #' library(easybgm)
 #' library(bgms)
@@ -278,7 +278,7 @@ plot_parameterHDI <- function(output, ...) {
 #' @export
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #'
 #' library(easybgm)
 #' library(bgms)

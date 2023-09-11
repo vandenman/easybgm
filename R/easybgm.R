@@ -101,7 +101,7 @@
 #' @importFrom utils packageVersion
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #'
 #' library(easybgm)
 #' library(bgms)

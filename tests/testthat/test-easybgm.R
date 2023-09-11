@@ -8,7 +8,7 @@ data <- na.omit(Wenchuan)
 ##--------------------------------
 set.seed(123)
 res_bgms <- easybgm(data[1:100, 1:5], type = "ordinal",
-                    package = "bgms", save = T, centrality = T)
+                    package = "bgms", save = T, centrality = T, iter = 1000)
 test_that("easybgm works for bgms", {
   testthat::expect_snapshot(summary(res_bgms))
 })
@@ -49,8 +49,8 @@ vdiffr::expect_doppelganger("centrality plot bgms", centrality_bgms)
 ## Fitting with BDgraph
 ##--------------------------------
 set.seed(123)
-res_bdgraph <- easybgm(data[1:100, 1:5], type = "continuous",
-                    package = "BDgraph", save = T, centrality = T)
+res_bdgraph <- suppressWarnings(easybgm(data[1:100, 1:5], type = "continuous",
+                    package = "BDgraph", save = T, centrality = T, iter = 1000))
 test_that("easybgm works for bdgraph", {
   testthat::expect_snapshot(summary(res_bdgraph))
 })
@@ -80,7 +80,7 @@ struc_bdgraph <- plot_structure(res_bdgraph)
 vdiffr::expect_doppelganger("structure plot Bdgraph", struc_bdgraph)
 
 # 6. HDI plot
-HDI_bdgraph <-plot_parameterHDI(res_bdgraph)
+HDI_bdgraph <- suppressWarnings(plot_parameterHDI(res_bdgraph))
 vdiffr::expect_doppelganger("HDI plot Bdgraph", HDI_bdgraph)
 
 # 7. centrality plot
@@ -106,7 +106,7 @@ vdiffr::expect_doppelganger("centrality plot Bdgraph", centrality_bdgraph)
 
 set.seed(123)
 data <- na.omit(Wenchuan)
-fit_bgms <- bgm(data[1:100, 1:5])
+fit_bgms <- bgm(data[1:100, 1:5], iter = 1000)
 network_bgmfit <- plot_network(fit_bgms)
 vdiffr::expect_doppelganger("network plot using bgm to fit", network_bgmfit)
 

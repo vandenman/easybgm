@@ -328,12 +328,12 @@ plot_structure.easybgm <- function(output, donotplot = FALSE, ...) {
 #' @export
 plot_parameterHDI.easybgm <- function(output, ...) {
 
-  if(!any(class(output) == "easybgm")){
-    stop("Wrong input provided. The function requires as input the output of the easybgm function.")
-  }
-
   if(is.null(output$samples_posterior)){
     stop("Samples of the posterior distribution required. When estimating the model, set \"save = TRUE\".")
+  }
+
+  if(any(class(output) == "package_bdgraph")){
+    warning("Posterior samples of the interaction parameters are obtained after the estimation. Especially for ordinal and skewed data, these estimates might be sub-optimal. Please interpret with caution.")
   }
 
   def_args <- list(

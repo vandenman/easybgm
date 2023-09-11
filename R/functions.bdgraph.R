@@ -88,6 +88,7 @@ bgm_extract.package_bdgraph <- function(fit, type, save,
     }
 
     if(save == TRUE){
+      warning("Posterior samples of the interaction parameters are obtained after the estimation. Especially for ordinal and skewed data, these estimates might be sub-optimal. Please interpret with caution.")
       # Extract posterior samples
       data<-as.matrix(data)
       bdgraph_res$samples_posterior <- extract_posterior(fit, data=data, method = model, not_cont)[[1]]
@@ -121,7 +122,7 @@ bgm_extract.package_bdgraph <- function(fit, type, save,
       save <- TRUE
     }
     if(save){
-      #warning("Posterior samples cannot be extracted for mixed models with BDgraph at the moment. Results are provided without the posterior samples.")
+      warning("Posterior samples of the interaction parameters are obtained after the estimation. Especially for ordinal and skewed data, these estimates might be sub-optimal. Please interpret with caution.")
 
       if(is.null(not_cont)){
         stop("Specify a vector indicating variables are continuos with the not_cont argument (1 indicates not continuous)",
