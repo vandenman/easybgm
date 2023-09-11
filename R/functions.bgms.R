@@ -107,6 +107,8 @@ bgm_extract.package_bgms <- function(fit, type, save,
   if(save){
     p <- length(fit$colnames)
     bgms_res$parameters <- vector2matrix(colMeans(fit$interactions), p = p)
+    bgms_res$thresholds <- as.matrix(colMeans(fit$thresholds))
+
     if(!is.null(data)){
     colnames(bgms_res$parameters) <- rownames(bgms_res$parameters) <- colnames(data)
     } else {
@@ -124,6 +126,7 @@ bgm_extract.package_bgms <- function(fit, type, save,
     bgms_res$sample_graph <- as.character(table_structures[, 1])
   } else {
     bgms_res$parameters <- fit$interactions
+    bgms_res$thresholds <- fit$thresholds
     bgms_res$inc_probs <- fit$gamma
     bgms_res$inc_BF <- (bgms_res$inc_probs/(1-bgms_res$inc_probs))/(edge.prior /(1-edge.prior))
     bgms_res$structure <- 1*(bgms_res$inc_probs > 0.5)
