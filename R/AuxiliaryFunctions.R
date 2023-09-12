@@ -1,8 +1,8 @@
 # 1. Turns vector into matrix
-vector2matrix <- function(vec, p, diag = F, bycolumn = F) {
+vector2matrix <- function(vec, p, diag = FALSE, bycolumn = FALSE) {
   m <- matrix(0, p, p)
 
-  if(bycolumn == F){
+  if(!bycolumn){
     m[lower.tri(m, diag = diag)] <- vec
     m <- t(m)
     m[lower.tri(m)] <- t(m)[lower.tri(m)]
@@ -25,19 +25,20 @@ pr2pc <- function(K) {
 
 # 3. BDgraph stores graphs as byte strings for efficiency
 string2graph <- function(Gchar, p) {
-  Gvec = rep(0, p*(p-1)/2)
+  Gvec <- rep(0, p*(p-1)/2)
   edges <- which(unlist(strsplit(as.character(Gchar), "")) == 1)
   Gvec[edges] = 1
   G <- matrix(0, p, p)
   G[upper.tri(G)] <- Gvec
-  G = G + t(G)
+  G <- G + t(G)
+  diag(G) <- 0
   return(G)
 }
 
 # 4. BDgraph extract posterior distribution for estimates
-extract_posterior <- function(fit, data, method = c("ggm", "gcgm"), not.cont){
+extract_posterior <- function(fit, data, method = c("ggm", "gcgm"), not_cont, no_samples = 10000){
   m <- length(fit$all_graphs)
-  k <- 10000
+  k <- no_samples
   n <- nrow(data)
   p <- ncol(data)
   j <- 1
@@ -45,7 +46,7 @@ extract_posterior <- function(fit, data, method = c("ggm", "gcgm"), not.cont){
   #Rs = array(0, dim=c(k, p, p))
   Rs = matrix(0, nrow = k, ncol = (p*(p-1))/2)
   if(method == "gcgm") {
-    S <- get_S_n_p(data, method = method, n = n, not.cont = not.cont)$S
+    S <- BDgraph::get_S_n_p(data, method = method, n = n, not.cont = not_cont)$S
   } else {
     S <- t(data) %*% data
   }
@@ -63,7 +64,8 @@ extract_posterior <- function(fit, data, method = c("ggm", "gcgm"), not.cont){
 
 # 5. Samples from the G-wishart distribution
 gwish_samples <- function(G, S, nsamples=1000) {
-  p <- nrow(S)
+  n <- nrow(S)
+  p <- ncol(S)
   #Rs <- array(0, dim=c(nsamples, p, p))
   Rs = matrix(0, nrow = nsamples, ncol = (p*(p-1))/2)
 
@@ -79,32 +81,29 @@ gwish_samples <- function(G, S, nsamples=1000) {
 # 6. Centrality of weighted graphs
 
 # Strength centrality only ## FASTER CODE
-centrality_strength <- function(res){
+centrality <- function(res){
   Nsamples <- nrow(res$samples_posterior)
   p <- nrow(res$parameters)
   strength_samples <- matrix(0, nrow = Nsamples, ncol = p)
   for(i in 1:Nsamples){
     strength_samples[i, ] <- rowSums(abs(vector2matrix(res$samples_posterior[i,], p, bycolumn = T)))
   }
-  strength_mean <- colMeans(strength_samples)
-  strength_median <- apply(strength_samples,2,median)
-  return(list(centrality_strength_samples = strength_samples, centrality_strength_mean = strength_mean,
-              centrality_strength_median = strength_median))
+  return(strength_samples)
 }
 
 # Strength, betweenness and closeness centrality ## SLOWER CODE
-centrality <- function(res){
+centrality_all <- function(res){
   Nsamples <- nrow(res$samples_posterior)
   p <- as.numeric(nrow(res$parameters))
   samples <- res$samples_posterior
   for(i in 1:Nsamples){
 
     #Strength
-    strength_samples <- rowSums(abs(vector2matrix(samples[i, ], p, bycolumn = T)))
+    strength_samples <- rowSums(abs(vector2matrix(samples[i, ], p, bycolumn = TRUE)))
     #EI
-    influence_samples <- rowSums(vector2matrix(samples[i, ], p, bycolumn = T))
+    influence_samples <- rowSums(vector2matrix(samples[i, ], p, bycolumn = TRUE))
 
-    DistMat <- 1/(ifelse(abs(vector2matrix(samples[i, ], p, bycolumn = T))==0,0,abs(vector2matrix(samples[i, ], p, bycolumn = T))))
+    DistMat <- 1/(ifelse(abs(vector2matrix(samples[i, ], p, bycolumn = TRUE))==0,0,abs(vector2matrix(samples[i, ], p, bycolumn = T))))
     igraphObject <- igraph::graph.adjacency(DistMat, weighted = TRUE, mode = "undirected")
     # Closeness
     closeness_samples <- igraph::closeness(igraphObject)
@@ -125,46 +124,8 @@ centrality <- function(res){
   return(centrality_samples)
 }
 
-# 7. Centrality of unweighted graphs
-centrality_graph <- function(fit, include = c("degree", "closeness", "betweenness") ){
-  # amount of visited structures
-  len <- length(fit$sample_graphs)
 
-  # objects to store graph centrality measures
-  degree <- matrix(0, nrow = len, ncol = p)
-  betweenness <- matrix(0, nrow = len, ncol = p)
-  closeness <- matrix(0, nrow = len, ncol = p)
-
-  # Obtain centrality measures for each graph
-  for (i in 1:len){
-    graph_matrix <- vector2matrix(as.numeric(unlist(strsplit(fit$sample_graphs[1], ""))), p , bycolumn = T)
-    graph_graph <- igraph::as.undirected(graph.adjacency(graph_matrix, weighted = T))
-
-    degree[i, ] <- igraph::degree(graph_graph)
-    betweenness[i, ] <- igraph::betweenness(graph_graph)
-    closeness[i, ] <- igraph::closeness(graph_graph)
-  }
-  # save centrality measures of interest
-  centrality_graph <- list()
-  if("degree" %in% include){
-    degree_samples <- degree[rep(1:nrow(degree), fit$graph_weights),]
-    centrality_graph[["degree_mean"]] <- colMeans(degree_samples)
-    centrality_graph[["degree_samples"]] <- degree_samples
-  }
-  if("betweenness" %in% include) {
-    betweenness_samples <- betweenness[rep(1:nrow(betweenness), fit$graph_weights),]
-    centrality_graph[["betweenness_mean"]] <- colMeans(betweenness_samples)
-    centrality_graph[["betweenness_samples"]] <- betweenness_samples
-  }
-  if  ("closeness" %in% include){
-    closeness_samples <- closeness[rep(1:nrow(closeness), fit$graph_weights),]
-    centrality_graph[["closeness_mean"]] <- colMeans(closeness_samples)
-    centrality_graph[["closeness_samples"]] <- closeness_samples
-  }
-  return(centrality_graph)
-}
-
-# 8. turn list into matrix
+# 7. turn list into matrix
 list2matrix <- function(obj, p) {
   nlist <- length(obj)/(p*p)
   m <- obj[, , 1]
@@ -175,4 +136,21 @@ list2matrix <- function(obj, p) {
     res[i, ] <- as.vector(m[lower.tri(m)])
   }
   return(res)
+}
+
+# 8. Set defaults of a function
+set_defaults <- function(args, ...) {
+  dots <- list(...)
+  def_args <- setdiff(names(args), names(dots))
+  dots[def_args] <- args[def_args]
+
+  return(dots)
+}
+
+# 9. Check for empty ...
+
+dots_check <- function(...){
+  if(...length() > 0){
+    warning("Arguments specified with ... are unused. ")
+  }
 }

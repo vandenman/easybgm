@@ -3,16 +3,18 @@
 # --------------------------------------------------------------------------------------------------
 
 bgm_fit.package_bggm <- function(fit, type, data, iter, save,
-                                 not.cont, centrality, progress, ...){
+                                 not_cont, centrality, progress, ...){
 
+  prior_defaults <- list(
+    prior_sd = .25
+  )
+
+  args <- set_defaults(prior_defaults, ...)
   # Fit the model
-  bggm_fit <- BGGM::explore(data,                        #(M) n*p matrix of responses
-                            type = type,                 #(O) type of data
-                            mixed_type = not.cont,       #(O) which data should be treated as ranks
-                            iter = iter,             #(O) no. iterations sampler
-                            progress = progress,            #(O) Should a progress bar be plotted?
-                            seed = NULL,                     #(O) Integer for random seed
-                            ...)
+  bggm_fit <- do.call(
+    BGGM::explore, c(list(Y = data, type = type, mixed_type = not_cont,
+                          iter = iter, progress = progress, seed = NULL), args)
+  )
   fit$model <- type
   fit$packagefit <- bggm_fit
   class(fit) <- c("package_bggm", "easybgm")
@@ -25,22 +27,25 @@ bgm_fit.package_bggm <- function(fit, type, data, iter, save,
 # 2. Extracting results function
 # --------------------------------------------------------------------------------------------------
 
-bgm_extract.package_bggm <- function(fit, model, edge.prior, save,
-                                     not.cont, data, centrality, ...){
+bgm_extract.package_bggm <- function(fit, type, save,
+                                     not_cont, data, centrality, ...){
   fit <- fit$packagefit
 
   out_select <- BGGM::select(fit)
   bggm_res <- list()
   bggm_res$parameters <- out_select$pcor_mat
   colnames(bggm_res$parameters) <- colnames(fit$Y)
-  bggm_res$BF <- out_select$BF_10
+  bggm_res$inc_BF <- out_select$BF_10
   bggm_res$inc_probs <- out_select$BF_10/(out_select$BF_10 + 1)
   bggm_res$structure <- out_select$Adj_10
 
-  if(centrality == TRUE){
+  colnames(bggm_res$inc_probs) <- colnames(bggm_res$parameters)
+  colnames(bggm_res$inc_BF) <- colnames(bggm_res$parameters)
+
+  if(centrality){
     save <- TRUE
   }
-  if(save == TRUE){
+  if(save){
     p <- ncol(bggm_res$parameters)
     samples <- matrix(0, ncol = p*(p-1)/2, nrow = fit$iter)
     for(i in 1:fit$iter){
@@ -49,7 +54,7 @@ bgm_extract.package_bggm <- function(fit, model, edge.prior, save,
     }
     bggm_res$samples_posterior <- samples
 
-    if(centrality == TRUE){
+    if(centrality){
       # bggm_res$centrality_strength <- centrality_strength(bggm_res)
       bggm_res$centrality <- centrality(bggm_res)
     }
@@ -64,4 +69,3 @@ bgm_extract.package_bggm <- function(fit, model, edge.prior, save,
   output <- bggm_res
   return(output)
 }
-
