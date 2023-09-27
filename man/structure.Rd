@@ -18,6 +18,8 @@ plot_structure(output, donotplot = FALSE, ...)
 The plot shows the resulting graph structure, i.e. all edges with some evidence of inclusion (i.e., inclusion Bayes factor greater than 1).
 }
 
+\examples{
+
 \dontrun{
 
 library(easybgm)
