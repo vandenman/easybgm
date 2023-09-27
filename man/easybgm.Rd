@@ -115,7 +115,7 @@ arguments. We give an overview of the prior arguments per package below.
 We would always encourage researcher to conduct prior robustness checks.
 }
 \examples{
-\donttest{
+\dontrun{
 
 library(easybgm)
 library(bgms)

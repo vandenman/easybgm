@@ -18,7 +18,7 @@ plot_structure_probabilities(output, as_BF = FALSE, ...)
 Plots the posterior structure probabilities of all visited structures, sorted from the most to the least probable.
 }
 \examples{
-\donttest{
+\dontrun{
 
 library(easybgm)
 library(bgms)

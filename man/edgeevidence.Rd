@@ -31,7 +31,7 @@ plot_edgeevidence(
 The edge evidence plot colors edges according to their hypothesis testing results: blue for included, red for excluded, and gray for inconclusive. This plot can be used to visualize the hypothesis testing results whether edge presence or absence. The edge evidence plot can aid researchers in deciding which edges provide robust inferential conclusions
 }
 \examples{
-\donttest{
+\dontrun{
 
 library(easybgm)
 library(bgms)
