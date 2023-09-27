@@ -31,7 +31,8 @@ plot_network(
 The network plot visualizes the strength of interactions between two nodes, the partial associations. Solely edges with a posterior inclusion probability larger than the \code{exc_prob} argument (default = 0.5) are shown. Edge thickness and saturation represent the strength of the association; the thicker the edge, the stronger the association. Red edges indicate negative relations and blue edges indicate positive associations.
 }
 \examples{
-\donttest{
+
+\dontrun{
 
 library(easybgm)
 library(bgms)

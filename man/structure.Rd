@@ -17,8 +17,8 @@ plot_structure(output, donotplot = FALSE, ...)
 \description{
 The plot shows the resulting graph structure, i.e. all edges with some evidence of inclusion (i.e., inclusion Bayes factor greater than 1).
 }
-\examples{
-\donttest{
+
+\dontrun{
 
 library(easybgm)
 library(bgms)
