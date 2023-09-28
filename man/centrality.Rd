@@ -16,9 +16,7 @@ plot_centrality(output, ...)
 Visualize the strength centralities and their uncertainties. The centrality estimate can be obtained for each sample of the posterior distribution of the association parameters to obtain an estimate of the uncertainty of the strength centrality estimate.
 }
 \examples{
-
 \dontrun{
-
 
 library(easybgm)
 library(bgms)

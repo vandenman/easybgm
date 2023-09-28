@@ -16,9 +16,7 @@ plot_complexity_probabilities(output, ...)
 Plots the posterior complexity probabilities of all visited structures, where complexity comprises the network density.
 }
 \examples{
-
 \dontrun{
-
 
 library(easybgm)
 library(bgms)
