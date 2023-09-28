@@ -4,7 +4,6 @@
 #' @param ... Additional arguments to be passed onto the respective fitting functions
 
 
-
 bgm_fit <- function(x, ...){
 
   UseMethod("bgm_fit", x)
