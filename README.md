@@ -191,7 +191,7 @@ inconclusive evidence as grey ($`0.1 < \text{BF}_{10} < 1`$).
 plot_edgeevidence(res, edge.width = 2, split = T)
 ```
 
-![](readme_plots/plot_edgeevidence.png)
+![](man/readme_plots/plot_edgeevidence.png)
 
 Furthermore, we can look at the network plot in which edges represent
 the partial associations.
@@ -202,7 +202,7 @@ plot_network(res, layout = "spring",
              theme = "TeamFortress", vsize = 6)
 ```
 
-![](readme_plots/plot_network.png)
+![](man/readme_plots/plot_network.png)
 
 We can also assess the structure specifically with three plots. Note
 that this only works, if we use either the `BDgraph` or `bgms` package.
@@ -211,20 +211,20 @@ that this only works, if we use either the `BDgraph` or `bgms` package.
 plot_structure_probabilities(res, as_BF = FALSE)
 ```
 
-![](readme_plots/plot_structure_probabilities.png)
+![](man/readme_plots/plot_structure_probabilities.png)
 
 ``` r
 plot_complexity_probabilities(res, as_BF = FALSE)
 ```
 
-![](readme_plots/plot_complexity_probabilities.png)
+![](man/readme_plots/plot_complexity_probabilities.png)
 
 ``` r
 plot_structure(res, layoutScale = c(.8,1), palette = "R",
                theme = "TeamFortress", vsize = 6, edge.width = .3, layout = "spring")
 ```
 
-![](readme_plots/plot_structure.png)
+![](man/readme_plots/plot_structure.png)
 
 In addition we can obtain posterior samples from the posterior
 distribution by setting `save = TRUE` in the `easybgm` function and
@@ -236,7 +236,7 @@ res <- easybgm(data, type = "binary", save = TRUE, centrality = TRUE)
 plot_parameterHDI(res)
 ```
 
-![](readme_plots/plot_parameterHDI.png)
+![](man/readme_plots/plot_parameterHDI.png)
 
 Furthermore, researcher can wish to aggregate the findings of the
 network model, commonly done with centrality measures. Due to the
@@ -251,12 +251,17 @@ centrality plot.
 plot_centrality(res, measures = "Strength")
 ```
 
-![](readme_plots/plot_centrality.png)
+![](man/readme_plots/plot_centrality.png)
 
 ## Background Information
 
-For more information on the Bayesian background, its application to
-networks and the respective plots, check out:
+For more information on the package, the Bayesian background, its
+application to networks and the respective plots, check out:
+
+Huth, K., Keetelaar, S., Sekulovski, N., van den Bergh, D., & Marsman,
+M. (2023). Simplifying Bayesian analysis of graphical models for the
+social sciences with easybgm: A user-friendly R-package.
+<https://doi.org/10.31234/osf.io/8f72p>
 
 Huth, K., de Ron, J., Luigjes, J., Goudriaan, A., Mohammadi, R., van
 Holst, R., Wagenmakers, E.J., & Marsman, M. (2023). Bayesian Analysis of
