@@ -101,7 +101,7 @@
 #' @importFrom utils packageVersion
 #'
 #' @examples
-#' \dontrun{
+#' 
 #'
 #' library(easybgm)
 #' library(bgms)
@@ -110,17 +110,20 @@
 #'
 #' # Fitting the Wenchuan PTSD data
 #'
-#' fit <- easybgm(data, type = "ordinal",
-#'                 iter = 1000 # note for demonstrative purposes, normally 1e5 is recommended
+#' fit <- easybgm(data, type = "continuous",
+#'                 iter = 1000 # for demonstrative purposes, generally, 1e5 iterations are recommended
 #'                 )
 #'
+#' summary(fit)
+#' 
 #' # To extract the posterior parameter distribution
 #' # and centrality measures
 #'
-#' fit <- easybgm(data, type = "ordinal",
-#'                 iter = 1000, save = TRUE,
+#' fit <- easybgm(data, type = "continuous",
+#'                 iter = 1000, # for demonstrative purposes, generally, 1e5 iterations are recommended
+#'                 save = TRUE,
 #'                 centrality = TRUE)
-#' }
+#' 
 
 
 
