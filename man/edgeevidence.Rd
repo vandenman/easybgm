@@ -34,13 +34,13 @@ Returns a plot
 The edge evidence plot colors edges according to their hypothesis testing results: blue for included, red for excluded, and gray for inconclusive. This plot can be used to visualize the hypothesis testing results whether edge presence or absence. The edge evidence plot can aid researchers in deciding which edges provide robust inferential conclusions
 }
 \examples{
-
+\donttest{
 library(easybgm)
 library(bgms)
 
 data <- na.omit(Wenchuan)
 fit <- easybgm(data, type = "continuous",
-                iter = 1000  # for demonstrative purposes, generally, 1e5 iterations are recommended
+                iter = 1000  # for demonstration only (> 5e4 recommended)
                 )
 
 plot_edgeevidence(fit)
@@ -56,4 +56,5 @@ plot_edgeevidence(fit, show = "inconclusive")
 plot_edgeevidence(fit, show = "excluded")
 
 par(oldpar)
+}
 }

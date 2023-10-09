@@ -125,11 +125,12 @@ data <- na.omit(Wenchuan)
 # Fitting the Wenchuan PTSD data
 
 fit <- easybgm(data, type = "continuous",
-                iter = 1000 # for demonstrative purposes, generally, 1e5 iterations are recommended
+                iter = 1000 # for demonstration only (> 5e4 recommended)
                 )
 
 summary(fit)
 
+\donttest{
 # To extract the posterior parameter distribution
 # and centrality measures
 
@@ -137,5 +138,5 @@ fit <- easybgm(data, type = "continuous",
                 iter = 1000, # for demonstrative purposes, generally, 1e5 iterations are recommended
                 save = TRUE,
                 centrality = TRUE)
-
+}
 }

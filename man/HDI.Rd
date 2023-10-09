@@ -27,7 +27,7 @@ library(bgms)
 
 data <- na.omit(Wenchuan)
 fit <- easybgm(data, type = "ordinal",
-              iter = 1000,  # for demonstrative purposes, generally, 1e5 iterations are recommended
+              iter = 1000,  # for demonstration only (> 5e4 recommended)
               save = TRUE)
 plot_parameterHDI(fit)
 }
