@@ -23,6 +23,7 @@
            upset-physior    0.774                 1.000          Inf     included
       
        Bayes Factors larger than 10 were considered sufficient evidence for the classification 
+       Bayes factors were obtained using Bayesian model-averaging. 
        --- 
        AGGREGATED EDGE OVERVIEW 
        Number of edges with sufficient evidence for inclusion: 3 
@@ -62,6 +63,7 @@
            upset-physior    0.595                  1.00          Inf     included
       
        Bayes Factors larger than 10 were considered sufficient evidence for the classification 
+       Bayes factors were obtained using Bayesian model-averaging. 
        --- 
        AGGREGATED EDGE OVERVIEW 
        Number of edges with sufficient evidence for inclusion: 7 
