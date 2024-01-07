@@ -134,6 +134,7 @@ print.easybgm <- function(x, ...){
         "\n")
     print(x$parameters, quote = FALSE, right = TRUE, row.names=F)
     cat("\n Bayes factors larger than", x$evidence_thresh, "were considered sufficient evidence for the classification",
+        "\n Bayes factors were obtained via single-model comparison.",
         "\n ---",
         "\n AGGREGATED EDGE OVERVIEW",
         "\n Number of edges with sufficient evidence for inclusion:", x$n_inclu_edges,
@@ -151,6 +152,7 @@ print.easybgm <- function(x, ...){
         "\n")
     print(x$parameters, quote = FALSE, right = TRUE, row.names=F)
     cat("\n Bayes Factors larger than", x$evidence_thresh, "were considered sufficient evidence for the classification",
+        "\n Bayes factors were obtained using Bayesian model-averaging.",
         "\n ---",
         "\n AGGREGATED EDGE OVERVIEW",
         "\n Number of edges with sufficient evidence for inclusion:", x$n_inclu_edges,
