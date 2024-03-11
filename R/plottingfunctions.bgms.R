@@ -276,12 +276,6 @@ plot_edgeevidence.bgms <- function(output, evidence_thresh = 10, split = FALSE, 
 
 plot_network.bgms <- function(output, exc_prob = .5, evidence_thresh = 10, dashed = TRUE, ...) {
   
-  if(is.null(output$inc_probs) & dashed == TRUE){
-    dashed <- FALSE
-    warning("The model was fitted without edge selection and no inclusion probabilities were obtained. Therefore, edges cannot be dashed according to their PIP.",
-            call. = FALSE)
-  }
-  
   fit_args <- extract_arguments(output)
   
   res <- bgm_extract.package_bgms(fit = output, save = fit_args$save, centrality = FALSE,
@@ -293,6 +287,11 @@ plot_network.bgms <- function(output, exc_prob = .5, evidence_thresh = 10, dashe
   
   output <- res
   
+  if(is.null(output$inc_probs)){
+    dashed <- FALSE
+    warning("The model was fitted without edge selection and no inclusion probabilities were obtained. Therefore, edges cannot be dashed according to their PIP.",
+            call. = FALSE)
+  }
   # Specify default arguments for function
   graph <- output$parameters
   default_args <- list(
