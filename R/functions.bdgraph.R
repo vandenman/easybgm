@@ -55,7 +55,7 @@ bgm_fit.package_bdgraph <- function(fit, type, data, iter, save,
   if(is.null(colnames(data))){
     fit$var_names <- paste0("V", 1:ncol(data))
   } else {
-    fit$var_names <-colnames(data)
+    fit$var_names <- colnames(data)
   }
   class(fit) <- c("package_bdgraph", "easybgm")
   return(fit)
@@ -86,7 +86,7 @@ bgm_extract.package_bdgraph <- function(fit, type, save,
   bdgraph_res <- list()
   if(model %in% "ggm"){
     #Bayesian model-averaged estimates
-    bdgraph_res$parameters <- pr2pc(fit$K_hat)
+    bdgraph_res$parameters <- qgraph::wi2net(fit$K_hat)
     diag(bdgraph_res$parameters) <- 0
     colnames(bdgraph_res$parameters) <- varnames
     bdgraph_res$inc_probs <- as.matrix(BDgraph::plinks(fit))
@@ -125,7 +125,7 @@ bgm_extract.package_bdgraph <- function(fit, type, save,
   
   if(model %in% c("gcgm")){
     #Bayesian model-averaged estimates
-    bdgraph_res$parameters <- pr2pc(fit$K_hat)
+    bdgraph_res$parameters <- qgraph::wi2net(fit$K_hat)
     diag(bdgraph_res$parameters) <- 0
     colnames(bdgraph_res$parameters) <- varnames
     bdgraph_res$inc_probs <- as.matrix(BDgraph::plinks(fit))
