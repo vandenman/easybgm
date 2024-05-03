@@ -55,6 +55,7 @@ bgm_fit.package_bdgraph <- function(fit, type, data, iter, save,
   if(is.null(colnames(data))){
     fit$var_names <- paste0("V", 1:ncol(data))
   } else {
+
     fit$var_names <- colnames(data)
   }
   class(fit) <- c("package_bdgraph", "easybgm")
@@ -110,6 +111,7 @@ bgm_extract.package_bdgraph <- function(fit, type, save,
       }
           # Extract posterior samples
       data<-as.matrix(data)
+
       bdgraph_res$samples_posterior <- extract_posterior(fit, data=data, method = model, not_cont, posterior_method = posterior_method)[[1]]
       
       if(centrality == TRUE){
@@ -142,7 +144,6 @@ bgm_extract.package_bdgraph <- function(fit, type, save,
       save <- TRUE
     }
     if(save){
-      
       if(posterior_method == "MAP"){
         
         warning("Posterior samples of the BDgraph package are obtained after the fit. 
@@ -160,6 +161,7 @@ bgm_extract.package_bdgraph <- function(fit, type, save,
       data <- as.matrix(data)
       
       # Extract posterior samples
+
       bdgraph_res$samples_posterior <- extract_posterior(fit, data, method = model, not_cont = not_cont, posterior_method = posterior_method)[[1]]
       
       if(centrality){

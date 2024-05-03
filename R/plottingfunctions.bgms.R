@@ -327,7 +327,6 @@ plot_network.bgms <- function(output, exc_prob = .5, evidence_thresh = 10, dashe
                                   legend = args$legend,
                                   label.cex = args$label.cex,
                                   legend.cex = args$legend.cex, ...)
-    
   }
   return(invisible(qgraph_plot))
 }

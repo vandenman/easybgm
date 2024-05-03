@@ -156,7 +156,6 @@ plot_edgeevidence.easybgm <- function(output, evidence_thresh = 10, split = FALS
     )
   }
 
-
   args <- set_defaults(default_args, ...)
   graph <- output$inc_BF
   diag(graph) <- 1
@@ -321,7 +320,6 @@ plot_network.easybgm <- function(output, exc_prob = 0.5, evidence_thresh = 10,  
                                   legend.cex = args$legend.cex, 
                                   edge.labels = args$edge.labels, ...)
     
-
   }
   return(invisible(qgraph_plot))
 }
