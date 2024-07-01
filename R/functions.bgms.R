@@ -48,9 +48,10 @@ bgm_extract.package_bgms <- function(fit, type, save,
   if (args$edge_prior[1] == "Bernoulli") {
     edge.prior <- args$inclusion_probability
   } else {
-    edge.prior <- beta(args$beta_bernoulli_alpha, args$beta_bernoulli_beta)
+    edge.prior <- calculate_edge_prior(alpha = args$beta_bernoulli_alpha,
+                                       beta = args$beta_bernoulli_beta,
+                                       p = ncol(data))
   }
-  
   
   bgms_res <- list()
   
@@ -65,7 +66,7 @@ bgm_extract.package_bgms <- function(fit, type, save,
     
     if(args$edge_selection){
       bgms_res$inc_probs <- extract_posterior_inclusion_probabilities(fit)
-      bgms_res$inc_BF <- (bgms_res$inc_probs/(1-bgms_res$inc_probs))/(edge.prior /(1-edge.prior))
+      bgms_res$inc_BF <- (bgms_res$inc_probs/(1-bgms_res$inc_probs))/(edge.prior /(1 - edge.prior))
       bgms_res$structure <- 1*(bgms_res$inc_probs > 0.5)
       #Obtain structure information
       gammas <- extract_edge_indicators(fit)
